@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name=org.meabookproj.meabook
+Exec=/usr/bin/meabook

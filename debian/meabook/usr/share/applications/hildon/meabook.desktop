@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=0.1
+Name=Meabook
+Exec=/usr/bin/meabook
+Type=Application
+Icon=meabook
+X-Osso-Service=org.meabookproj.meabook
+X-Osso-Type=application/x-executable

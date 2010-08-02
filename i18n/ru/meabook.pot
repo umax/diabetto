@@ -1,0 +1,143 @@
+# Copyright (C) YEAR ORGANIZATION
+# Max Usachev <maxusachev@gmail.com>, 2010.
+#
+msgid ""
+msgstr ""
+
+msgid "Meabook"
+msgstr "Meabook"
+
+msgid "Settings"
+msgstr "Настройки"
+
+msgid "About"
+msgstr "О программе"
+
+msgid "Import"
+msgstr "Импорт"
+
+msgid "Importing"
+msgstr "Импортирую"
+
+msgid "Import error"
+msgstr "Ошибка импорта"
+
+msgid "Unsupported file format!"
+msgstr "Неподходящий формат файла!"
+
+msgid "level1"
+msgstr "Филиалы"
+
+msgid "level2"
+msgstr "Отделы"
+
+msgid "level3"
+msgstr "Люди"
+
+msgid "Fields to show"
+msgstr "Поля для отображения"
+
+msgid "Fields order"
+msgstr "Порядок полей"
+
+msgid "Fields"
+msgstr "Поля"
+
+msgid "Position"
+msgstr "Позиция"
+
+msgid "Done"
+msgstr "Готово"
+
+msgid "cn"
+msgstr "ФИО"
+
+msgid "uid"
+msgstr "Логин"
+
+msgid "title"
+msgstr "Должность"
+
+msgid "mail"
+msgstr "Электронная почта"
+
+msgid "homePhone"
+msgstr "Телефон (Домашний)"
+
+msgid "telephoneNumber"
+msgstr "Телефон (Рабочий)"
+
+msgid "internalPhone"
+msgstr "Телефон (Внутренний)"
+
+msgid "mobile"
+msgstr "Телефон (Мобильный)"
+
+msgid "gender"
+msgstr "Пол"
+
+msgid "o"
+msgstr "Филиал"
+
+msgid "ou"
+msgstr "Отдел"
+
+msgid "sn"
+msgstr "Фамилия"
+
+msgid "givenName"
+msgstr "Имя Отчество"
+
+msgid "initials"
+msgstr "Инициалы"
+
+msgid "facsimileTelephoneNumber"
+msgstr "Факс"
+
+msgid "dateOfBirth"
+msgstr "День рождения"
+
+msgid "Enter search text here"
+msgstr "Введите текст для поиска"
+
+msgid "Search"
+msgstr "Поиск"
+
+msgid "Search criterion"
+msgstr "Критерий поиска"
+
+msgid "Search results"
+msgstr "Результаты поиска"
+
+msgid "Import from LDIF"
+msgstr "Импорт из LDIF"
+
+msgid "Import from database"
+msgstr "Импорт из базы данных"
+
+msgid "Import type"
+msgstr "Источник"
+
+msgid "File name"
+msgstr "Имя файла"
+
+msgid "Choose file name"
+msgstr "Выберите файл"
+
+msgid "Developers"
+msgstr "Разработчики"
+
+msgid "Tanya Makova"
+msgstr "Татьяна Макова"
+
+msgid "Max Usachev"
+msgstr "Макс Усачёв"
+
+msgid "Enterprise address book"
+msgstr "Корпоративная адресная книга"
+
+msgid "Version"
+msgstr "Версия"
+
+msgid "No items found"
+msgstr "Ничего не найдено"

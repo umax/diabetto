@@ -1,0 +1,59 @@
+# Copyright (C) YEAR ORGANIZATION
+# Max Usachev <maxusachev@gmail.com>, 2010.
+#
+msgid ""
+msgstr ""
+
+msgid "level1"
+msgstr "Tree view"
+
+msgid "level3"
+msgstr "People view"
+
+msgid "cn"
+msgstr "Name"
+
+msgid "uid"
+msgstr "Nickname"
+
+msgid "title"
+msgstr "Job title"
+
+msgid "mail"
+msgstr "E-mail"
+
+msgid "homePhone"
+msgstr "Phone (home)"
+
+msgid "telephoneNumber"
+msgstr "Phone (work)"
+
+msgid "internalPhone"
+msgstr "Phone (internal)"
+
+msgid "mobile"
+msgstr "Mobile"
+
+msgid "gender"
+msgstr "Gender"
+
+msgid "o"
+msgstr "Company"
+
+msgid "ou"
+msgstr "Department"
+
+msgid "sn"
+msgstr "Last name"
+
+msgid "givenName"
+msgstr "First name"
+
+msgid "initials"
+msgstr "Initials"
+
+msgid "facsimileTelephoneNumber"
+msgstr "Fax"
+
+msgid "dateOfBirth"
+msgstr "Birthday"

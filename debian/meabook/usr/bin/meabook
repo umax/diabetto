@@ -1,0 +1,56 @@
+#!/usr/bin/python2.5
+
+import os
+import sys
+import gettext
+gettext.textdomain('meabook')
+_ = gettext.gettext
+from optparse import OptionParser
+
+# add meabook directory to Python path in debug mode
+if os.path.basename(sys.argv[0]).endswith("debug"):
+    sys.path.insert(0, "../../")
+    sys.path.insert(0, "../")
+
+from meabook.factory import app_factory
+from meabook.config import MeabookConfig
+from meabook.database.SQLite import SQLite
+from meabook.controller import MeabookController
+from meabook.version import version
+
+try:
+    import osso
+except ImportError:
+    pass
+else:
+    SERV = osso.Context("org.meabookproj.meabook", version, False)
+
+
+def parse_command_line(argv):
+    """Parse command line options."""
+
+    parser = OptionParser(usage='%prog [options]')
+    parser.add_option('-u', '--ui', action='store', \
+        help='set user interface type', default='fremantle')
+    return parser.parse_args(argv)
+
+
+def main(argv):
+    opts, argv = parse_command_line(argv)
+
+    if 'MYDOCSDIR' in os.environ and os.path.exists(os.path.join(\
+        os.environ['MYDOCSDIR'], '.documents')):
+        basedir = os.path.join(os.environ['MYDOCSDIR'], '.documents/meabook')
+    elif os.path.exists(os.path.join(os.getcwdu(), '.meabook')):
+        basedir = os.path.abspath(os.path.join(os.getcwdu(), '.meabook'))
+    else:
+        basedir = os.path.join(os.environ['HOME'], '.meabook')
+
+    model = SQLite(basedir)
+    view, renderer = app_factory(opts.ui)
+    config = MeabookConfig(basedir, model)
+    controller = MeabookController(model, view, renderer, config)
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv))

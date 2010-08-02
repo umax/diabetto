@@ -1,0 +1,143 @@
+# Copyright (C) YEAR ORGANIZATION
+# Max Usachev <maxusachev@gmail.com>, 2010.
+#
+msgid ""
+msgstr ""
+
+msgid "Meabook"
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "About"
+msgstr ""
+
+msgid "Import"
+msgstr ""
+
+msgid "Importing"
+msgstr ""
+
+msgid "Import error"
+msgstr ""
+
+msgid "Unsupported file format!"
+msgstr ""
+
+msgid "level1"
+msgstr ""
+
+msgid "level2"
+msgstr ""
+
+msgid "level3"
+msgstr ""
+
+msgid "Fields to show"
+msgstr ""
+
+msgid "Fields order"
+msgstr ""
+
+msgid "Fields"
+msgstr ""
+
+msgid "Position"
+msgstr ""
+
+msgid "Done"
+msgstr ""
+
+msgid "cn"
+msgstr ""
+
+msgid "uid"
+msgstr ""
+
+msgid "title"
+msgstr ""
+
+msgid "mail"
+msgstr ""
+
+msgid "homePhone"
+msgstr ""
+
+msgid "telephoneNumber"
+msgstr ""
+
+msgid "internalPhone"
+msgstr ""
+
+msgid "mobile"
+msgstr ""
+
+msgid "gender"
+msgstr ""
+
+msgid "o"
+msgstr ""
+
+msgid "ou"
+msgstr ""
+
+msgid "sn"
+msgstr ""
+
+msgid "givenName"
+msgstr ""
+
+msgid "initials"
+msgstr ""
+
+msgid "facsimileTelephoneNumber"
+msgstr ""
+
+msgid "dateOfBirth"
+msgstr ""
+
+msgid "Enter search text here"
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "Search criterion"
+msgstr ""
+
+msgid "Search results"
+msgstr ""
+
+msgid "Import from LDIF"
+msgstr ""
+
+msgid "Import from database"
+msgstr ""
+
+msgid "Import type"
+msgstr ""
+
+msgid "File name"
+msgstr ""
+
+msgid "Choose file name"
+msgstr ""
+
+msgid "Developers"
+msgstr ""
+
+msgid "Tanya Makova"
+msgstr ""
+
+msgid "Max Usachev"
+msgstr ""
+
+msgid "Enterprise address book"
+msgstr ""
+
+msgid "Version"
+msgstr ""
+
+msgid "No items found"
+msgstr ""

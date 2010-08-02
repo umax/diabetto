@@ -1,0 +1,30 @@
+meabook (0.3.1) unstable; urgency=low
+
+  * simplified UI
+  * updated localization
+  * small fixes
+
+ -- Max Usachev <maxusachev@gmail.com>  Thu, 24 Jun 2010 14:22:26 +0200
+
+meabook (0.3) unstable; urgency=low
+
+  * added caller functions
+  * added full search
+  * more bug fixes
+
+ -- Max Usachev <maxusachev@gmail.com>  Wed, 23 Jun 2010 11:11:33 +0200
+
+meabook (0.2) unstable; urgency=low
+
+  * added icons for fields
+  * added avatar for entry
+  * added Russian localization
+  * UI fixes
+
+ -- Max Usachev <maxusachev@gmail.com>  Fri, 18 Jun 2010 08:46:00 +0200
+
+meabook (0.1) unstable; urgency=low
+
+  * Initial release
+
+ -- Max Usachev <maxusachev@gmail.com>  Wed, 16 Jun 2010 11:07:41 +0200
