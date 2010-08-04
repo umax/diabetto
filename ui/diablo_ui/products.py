@@ -103,7 +103,7 @@ class ProductsWidget:
         # cname, cid
         liststore = gtk.ListStore(str, int)
         for cname, cid in self.controller.get_categories():
-            liststore.append([cname, cid])
+            liststore.append([cname.capitalize(), cid])
         self._set_treeview_content(liststore)
 
     def show_products_cb(self, widget):
@@ -113,7 +113,8 @@ class ProductsWidget:
         # pname, pu, pi, pid, cname, cid
         liststore = gtk.ListStore(str, int, int, int, str, int)
         for pname, pu, pi, pid, cname, cid in self.controller.get_products():
-            liststore.append([pname, pu, pi, pid, cname, cid])
+            liststore.append([pname.capitalize(), pu, pi, pid, \
+            cname.capitalize(), cid])
         self._set_treeview_content(liststore)
 
     def on_treeview_double_click_cb(self, widget, row, column):
