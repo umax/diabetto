@@ -12,6 +12,6 @@ widget "*.scrolled_window.GtkVScrollbar" style "scrolled-window"
 
 style "entry" {
     engine "pixmap" {}
-    font_name = "Nokia Sans 22"
+    font_name = "Nokia Sans 24"
 }
 widget "*.entry_widget" style "entry"
