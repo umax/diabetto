@@ -1,0 +1,9 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=0.1
+Name=Diabetto
+Exec=/usr/bin/diabetto
+Type=Application
+Icon=diabetto
+X-Osso-Service=org.diabettoproj.diabetto
+X-Osso-Type=application/x-executable
