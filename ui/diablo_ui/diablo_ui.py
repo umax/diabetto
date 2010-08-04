@@ -17,6 +17,7 @@ class DiabloDiabetto:
 
     def start(self):
         self.window.show_all()
+        #self.window.fullscreen()
         gtk.main()
 
     def exit(self, event):
@@ -29,6 +30,7 @@ class DiabloDiabetto:
         window.resize(800, 480)
         window.connect('destroy', self.exit)
         switcher = gtk.Notebook()
+        switcher.set_show_tabs(False)
         window.add(switcher)
         return window, switcher
 
@@ -65,7 +67,7 @@ class DiabloDiabetto:
             column.set_sort_column_id(0)
         else:
             column1 = gtk.TreeViewColumn(_('Product'))
-            column2 = gtk.TreeViewColumn(_('Uglevodi'))
+            column2 = gtk.TreeViewColumn(_('Carbohydrates'))
             column3 = gtk.TreeViewColumn(_('Index'))
             column4 = gtk.TreeViewColumn(_('Category'))
             self.treeview.append_column(column1)
@@ -85,6 +87,104 @@ class DiabloDiabetto:
             column4.add_attribute(cell, 'text', 4)
 
         self.treeview.set_model(content)
+
+    # dialogs
+    def show_question_dialog(self, title, question):
+        """Shows Question dialog."""
+
+        dialog = gtk.Dialog(title=title, parent=self.window, buttons=( \
+            _('Yes'), gtk.RESPONSE_YES, _('No'), gtk.RESPONSE_NO))
+        label = gtk.Label(question)
+        label.show()
+        dialog.vbox.pack_start(label)
+        response = dialog.run()
+        dialog.destroy()
+        if response == gtk.RESPONSE_YES:
+            return True
+        return False
+
+    def show_add_category_dialog(self, data=None):
+        """Shows AddCategory dialog."""
+
+        dialog = gtk.Dialog(title=_('Add new category'), parent=self.window, \
+            buttons=(_('Add'), gtk.RESPONSE_OK, _('Cancel'), \
+            gtk.RESPONSE_CANCEL))
+        # creating widgets
+        table = gtk.Table(rows=1, columns=2, homogeneous=False)
+        table.set_col_spacings(10)
+        cname_label = gtk.Label(_('Category name'))
+        cname_entry = gtk.Entry()
+        if data:
+            cname_entry.set_text(data)
+        # packing widgets
+        table.attach(cname_label, 0, 1, 0, 1)
+        table.attach(cname_entry, 1, 2, 0, 1)
+        dialog.vbox.pack_start(table)
+        dialog.vbox.show_all()
+        response = dialog.run()
+        cname = cname_entry.get_text()
+        dialog.destroy()
+        if response == gtk.RESPONSE_OK and cname:
+            return cname
+        return None
+
+    def show_add_product_dialog(self, data=None):
+        """Shows AddProduct dialog."""
+
+        dialog = gtk.Dialog(title=_('Add new product'), parent=self.window, \
+            buttons=(_('Add'), gtk.RESPONSE_OK, _('Cancel'), \
+            gtk.RESPONSE_CANCEL))
+        # creating widgets
+        table = gtk.Table(rows=4, columns=2, homogeneous=False)
+        table.set_col_spacings(10)
+        table.set_row_spacings(4)
+        pname_label = gtk.Label(_('Product name'))
+        pname_entry = gtk.Entry()
+        pu_label = gtk.Label(_('Carbohydrates'))
+        pu_entry = gtk.Entry()
+        pi_label = gtk.Label(_('Index'))
+        pi_entry = gtk.Entry()
+        category_label = gtk.Label(_('Category'))
+        # populating category list
+        liststore = gtk.ListStore(str, int)
+        for cname, cid in self.controller.get_categories():
+            liststore.append([cname, cid])
+        combobox = gtk.ComboBox(liststore)
+        cell = gtk.CellRendererText()
+        combobox.pack_start(cell, False)
+        combobox.add_attribute(cell, 'text', 0)
+        combobox.set_active(0)
+        # cheking for edit mode
+        if data is not None: # edit mode
+            pname_entry.set_text(data[0])
+            pu_entry.set_text(str(data[1]))
+            pi_entry.set_text(str(data[2]))
+            for index in range(len(liststore)):
+                if liststore[index][1] == data[3]:
+                    combobox.set_active(index)
+                    break
+        # packing widgets
+        table.attach(pname_label, 0, 1, 0, 1)
+        table.attach(pname_entry, 1, 2, 0, 1)
+        table.attach(pu_label, 0, 1, 1, 2)
+        table.attach(pu_entry, 1, 2, 1, 2)
+        table.attach(pi_label, 0, 1, 2, 3)
+        table.attach(pi_entry, 1, 2, 2, 3)
+        table.attach(category_label, 0, 1, 3, 4)
+        table.attach(combobox, 1, 2, 3, 4)
+        dialog.vbox.pack_start(table)
+        dialog.vbox.show_all()
+        response = dialog.run()
+        # getting values
+        pname = pname_entry.get_text()
+        pu = pu_entry.get_text()
+        pi = pi_entry.get_text()
+        model, active = combobox.get_model(), combobox.get_active()
+        cid = model[active][1]
+        dialog.destroy()
+        if response == gtk.RESPONSE_OK and pname:
+            return pname, pu, pi, cid
+        return None, None, None, None
 
 
     # callbacks
@@ -109,6 +209,7 @@ class DiabloDiabetto:
         remove_button.connect('clicked', self.remove_cb)
         edit_button = gtk.Button(_('Edit'))
         edit_button.set_size_request(-1, 70)
+        edit_button.connect('clicked', self.edit_cb)
         self.treeview = gtk.TreeView()
         self.treeview.connect('row-activated', self.on_treeview_double_click_cb)
         table.attach(categories_button, 0, 2, 0, 1, yoptions=gtk.SHRINK)
@@ -169,20 +270,66 @@ class DiabloDiabetto:
         """Adds new category or product."""
 
         model, iterator = self.treeview.get_selection().get_selected()
-        print model[iterator][0]
+        if self.mode == CATEGORIES_MODE:
+            cname = self.show_add_category_dialog()
+            if cname:
+                self.controller.add_category(cname)
+                self.show_categories_cb(None)
+        else:
+            pname, pu, pi, cid = self.show_add_product_dialog()
+            if pname:
+                self.controller.add_product(pname, pu, pi, cid)
+                self.show_products_cb(None)
 
     def remove_cb(self, widget):
         """Removes category or product."""
 
         model, iterator = self.treeview.get_selection().get_selected()
         if self.mode == CATEGORIES_MODE:
-            cid = model[iterator][1]
-            print cid
+            try:
+                cid = model[iterator][1]
+            except: # no category is selected
+                return
+            else:
+                if self.show_question_dialog(_('Category removing'), \
+                    _('Do you want to remove selected category?')):
+                    self.controller.remove_category(cid)
+                    self.show_categories_cb(None)
         else:
-            pid = model[iterator][3]
-            print pid
-       
+            try:
+                pid = model[iterator][3]
+            except: # no product is selected
+                return
+            else:
+                if self.show_question_dialog(_('Product removing'), \
+                    _('Do you want to remove selected product?')):
+                    self.controller.remove_product(pid)
+                    self.show_products_cb(None)
+
     def edit_cb(self, widget):
         """Edits category or product."""
-        
+
         model, iterator = self.treeview.get_selection().get_selected()
+        if self.mode == CATEGORIES_MODE:
+            try:
+                cname, cid = model[iterator][0], model[iterator][1]
+            except: # no category is selected
+                return
+            else:
+                new_cname = self.show_add_category_dialog(cname)
+                if new_cname:
+                    self.controller.update_category(new_cname, cid)
+                    self.show_categories_cb(None)
+        else:
+            try:
+                pname, pu, pi, pid, cid = model[iterator][0], \
+                    model[iterator][1], model[iterator][2], \
+                    model[iterator][3], model[iterator][5]
+            except: # no product is selected
+                return
+            else:
+                pname, pu, pi, cid = self.show_add_product_dialog( \
+                    (pname, pu, pi, cid))
+                if pname:
+                    self.controller.update_product(pname, pu, pi, pid, cid)
+                    self.show_products_cb(None)

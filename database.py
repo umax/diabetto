@@ -63,6 +63,13 @@ class Database:
                 (pname.lower(), pu, pi, cid))
         self.save()
 
+    def update_product(self, pname, pu, pi, pid, cid):
+        """Updates existing product."""
+
+        self.conn.execute("""UPDATE products SET pname=?, pu=?, pi=?, cid=? \
+            WHERE pid=?""", (pname, pu, pi, cid, pid))
+        self.save()
+
     def del_product(self, pid):
         """Remove product from database."""
 
@@ -79,13 +86,20 @@ class Database:
                 (cname.lower(),))
         self.save()
 
+    def update_category(self, cname, cid):
+        """Updates existing  category."""
+
+        self.conn.execute("""UPDATE categories SET cname=? WHERE cid=?""", \
+            (cname.lower(), cid))
+        self.save()
+
     def del_category(self, cid, del_products=True):
         """Remove category from database."""
 
         execute = self.conn.execute
         execute("""DELETE FROM categories WHERE cid=?""", (cid,))
         if del_products:
-            execute("""DELETE FROM products WHERE cid=?)""", (cid,))
+            execute("""DELETE FROM products WHERE cid=?""", (cid,))
         else:
             execute("""UPDATE products SET cid=1 WHERE cid=?""", (cid,))
         self.save()
