@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import gtk
+import pango
 from gettext import gettext as _
 from diabetto.constants import *
 from diabetto.ui.diablo_ui.common import create_button
@@ -19,20 +20,25 @@ class ProductsWidget:
         self.mode = CATEGORIES_MODE
 
         # create widgets
-        table = gtk.Table(rows=3, columns=6)
-        categories_button = create_button('categories.png', \
+        table = gtk.Table(rows=3, columns=6, homogeneous=False)
+        categories_button = create_button(_('Categories'), \
             self.show_categories_cb)
-        products_button = create_button('add.png', self.show_products_cb)
-        menu_button = create_button('menu.png', self.show_menu_cb)
-        add_button = create_button('add.png', self.add_cb)
-        remove_button = create_button('remove.png', self.remove_cb)
-        edit_button = create_button('edit.png', self.edit_cb)
+        products_button = create_button(_('Products'), self.show_products_cb)
+        menu_button = create_button(_('Menu'), self.show_menu_cb)
+        add_button = create_button(_('Add'), self.add_cb)
+        remove_button = create_button(_('Remove'), self.remove_cb)
+        edit_button = create_button(_('Edit'), self.edit_cb)
         self.treeview = gtk.TreeView()
         self.treeview.connect('row-activated', self.on_treeview_double_click_cb)
+        scrolled_window = gtk.ScrolledWindow()
+        scrolled_window.set_name('scrolled_window')
+        scrolled_window.set_border_width(2)
+        scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_ALWAYS)
+        scrolled_window.add_with_viewport(self.treeview)
         table.attach(categories_button, 0, 2, 0, 1, yoptions=gtk.SHRINK)
         table.attach(products_button, 2, 4, 0, 1, yoptions=gtk.SHRINK)
         table.attach(menu_button, 4, 6, 0, 1, yoptions=gtk.SHRINK)
-        table.attach(self.treeview, 0, 6, 1, 2, yoptions=gtk.EXPAND|gtk.FILL)
+        table.attach(scrolled_window, 0, 6, 1, 2, yoptions=gtk.EXPAND|gtk.FILL)
         table.attach(add_button, 0, 2, 2, 3, yoptions=gtk.SHRINK)
         table.attach(edit_button, 2, 4, 2, 3, yoptions=gtk.SHRINK)
         table.attach(remove_button, 4, 6, 2, 3, yoptions=gtk.SHRINK)
@@ -50,11 +56,14 @@ class ProductsWidget:
         for column in self.treeview.get_columns():
             self.treeview.remove_column(column)
 
+        cell = gtk.CellRendererText()
+        cell.set_property('font-desc', pango.FontDescription( \
+                'Nokia Sans 24'))
+        cell.set_property('height', 70)
+
         if self.mode == CATEGORIES_MODE:
             column = gtk.TreeViewColumn(_('Categories'))
             self.treeview.append_column(column)
-            cell = gtk.CellRendererText()
-            cell.set_property('width', 800)
             column.pack_start(cell, False)
             column.add_attribute(cell, 'text', 0)
             column.set_sort_column_id(0)
@@ -67,8 +76,6 @@ class ProductsWidget:
             self.treeview.append_column(column2)
             self.treeview.append_column(column3)
             self.treeview.append_column(column4)
-            cell = gtk.CellRendererText()
-            cell.set_property('width', 200)
             column1.pack_start(cell, False)
             column1.add_attribute(cell, 'text', 0)
             column1.set_sort_column_id(0)

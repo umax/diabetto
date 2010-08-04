@@ -10,7 +10,7 @@ def show_question_dialog(parent, title, question):
 
     dialog = gtk.Dialog(title=title, parent=parent, buttons=( \
         _('Yes'), gtk.RESPONSE_YES, _('No'), gtk.RESPONSE_NO))
-    label = gtk.Label(question)
+    label = gtk.Label('\n' + question + '\n')
     dialog.vbox.pack_start(label)
     dialog.vbox.show_all()
     response = dialog.run()
@@ -32,15 +32,17 @@ def show_add_category_dialog(parent, data=None):
 
     # creating widgets
     table = gtk.Table(rows=1, columns=2, homogeneous=False)
+    table.set_border_width(8)
     table.set_col_spacings(10)
     cname_label = gtk.Label(_('Category name'))
     cname_entry = gtk.Entry()
+    cname_entry.set_name('entry_widget')
     if data:
         cname_entry.set_text(data)
     # packing widgets
     table.attach(cname_label, 0, 1, 0, 1)
-    table.attach(cname_entry, 1, 2, 0, 1)
-    dialog.vbox.pack_start(table)
+    table.attach(cname_entry, 1, 2, 0, 1, ypadding=gtk.EXPAND|gtk.FILL)
+    dialog.vbox.pack_start(table, padding=8)
     dialog.vbox.show_all()
     response = dialog.run()
     cname = cname_entry.get_text()
@@ -57,14 +59,18 @@ def show_add_product_dialog(parent, categories, data=None):
         gtk.RESPONSE_CANCEL))
     # creating widgets
     table = gtk.Table(rows=4, columns=2, homogeneous=False)
+    table.set_border_width(8)
     table.set_col_spacings(10)
     table.set_row_spacings(4)
     pname_label = gtk.Label(_('Product name'))
     pname_entry = gtk.Entry()
+    pname_entry.set_name('entry_widget')
     pu_label = gtk.Label(_('Carbohydrates'))
     pu_entry = gtk.Entry()
+    pu_entry.set_name('entry_widget')
     pi_label = gtk.Label(_('Index'))
     pi_entry = gtk.Entry()
+    pi_entry.set_name('entry_widget')
     category_label = gtk.Label(_('Category'))
     # populating category list
     liststore = gtk.ListStore(str, int)
@@ -98,8 +104,12 @@ def show_add_product_dialog(parent, categories, data=None):
     response = dialog.run()
     # getting values
     pname = pname_entry.get_text()
-    pu = pu_entry.get_text()
-    pi = pi_entry.get_text()
+    try:
+        pu = int(pu_entry.get_text())
+        pi = int(pi_entry.get_text())
+    except:
+        dialog.destroy()
+        return None, None, None, None
     model, active = combobox.get_model(), combobox.get_active()
     cid = model[active][1]
     dialog.destroy()
