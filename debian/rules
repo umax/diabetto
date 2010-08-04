@@ -9,7 +9,7 @@ PYTHON := PYTHONOPTIMIZE=2 python2.5
 
 build: build-stamp
 
-build-stamp:
+build-stamp: 
 	dh_testdir
 	$(PYTHON) setup.py build
 	touch $@
@@ -22,17 +22,15 @@ clean:
 	rm -rf ./build
 	rm -rf ./*.egg-info
 	rm -f *.py[co]
-	dh_clean
+	dh_clean 
 
 install: build
 	dh_testdir
 	dh_testroot
-	dh_clean -k
+	dh_clean -k 
 	dh_installdirs
-	$(PYTHON) setup.py install --root=$(PREFIX) --prefix=/opt/maemo/usr
+	$(PYTHON) setup.py install --root=$(PREFIX)
 	cp $(PACKAGE) $(PREFIX)/usr/bin/$(PACKAGE)
-	mkdir -p $(CURDIR)/debian/$(PACKAGE)/usr/lib/python2.5/site-packages
-	ln -s /opt/maemo/usr/lib/python2.5/site-packages/meabook $(CURDIR)/debian/$(PACKAGE)/usr/lib/python2.5/site-packages/meabook
 
 binary-indep: build install
 	dh_testdir

@@ -1,0 +1,10 @@
+Package: diabetto
+Version: 0.1
+Architecture: all
+Maintainer: Max Usachev <maxusachev@gmail.com>
+Installed-Size: 248
+Depends: python2.5, python2.5-gtk2, python-osso | python2.5-osso | python-gtk2
+Section: user/utils
+Priority: optional
+Description: Diabetto food calculator
+Maemo-Display-Name: Diabetto

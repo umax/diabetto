@@ -1,0 +1,17 @@
+style "scrolled-window" {
+    engine "pixmap" {}
+    xthickness = 0
+    ythickness = 0
+    GtkScrolledWindow::scrollbars-within-bevel = 0
+    GtkScrolledWindow::scrollbar-spacing = 0
+    GtkRange::slider-width = 70
+    GtkRange::stepper-size = 70
+    GtkRange::trough-border = 0
+}
+widget "*.scrolled_window.GtkVScrollbar" style "scrolled-window"
+
+style "entry" {
+    engine "pixmap" {}
+    font_name = "Nokia Sans 22"
+}
+widget "*.entry_widget" style "entry"

@@ -1,2 +1,2 @@
 rm ../diabetto_*
-pkg-buildpackage -rfakeroot -uc -us -sa -D -d
+dpkg-buildpackage -rfakeroot -uc -us -sa -D -d
