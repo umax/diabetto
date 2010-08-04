@@ -2,12 +2,11 @@
 
 import os
 import sys
-#import gettext
-#gettext.textdomain('meabook')
-#_ = gettext.gettext
+import gettext
+gettext.textdomain('diabetto')
 from optparse import OptionParser
 
-# add meabook directory to Python path in debug mode
+# add diabetto directory to Python path in debug mode
 if os.path.basename(sys.argv[0]).endswith("debug"):
     sys.path.insert(0, "../../")
     sys.path.insert(0, "../")
@@ -15,13 +14,14 @@ if os.path.basename(sys.argv[0]).endswith("debug"):
 from diabetto.factory import app_factory
 from diabetto.database import Database
 from diabetto.controller import Controller
+from diabetto.version import version
 
-#try:
-#    import osso
-#except ImportError:
-#    pass
-#else:
-#    SERV = osso.Context("org.meabookproj.meabook", version, False)
+try:
+    import osso
+except ImportError:
+    pass
+else:
+    SERV = osso.Context("org.diabettoproj.diabetto", version, False)
 
 
 def parse_command_line(argv):
