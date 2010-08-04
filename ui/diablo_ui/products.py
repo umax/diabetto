@@ -135,8 +135,7 @@ class ProductsWidget:
             pname, pu, pi, cid = show_add_product_dialog(self.window, \
                 self.controller.get_categories())
             if pname:
-                self.controller.add_product(self.window, \
-                    self.controller.get_categories(), (pname, pu, pi, cid))
+                self.controller.add_product(pname, pu, pi, cid)
                 self.show_products_cb(None)
 
     def remove_cb(self, widget):
