@@ -25,11 +25,11 @@ class MainWidget:
         composition_button = create_button(_('Composition'), \
             self.create_composition_widget_cb, 70, 70)
         exit_button = create_button(_('Exit'), self.exit_cb, 70, 70)
-        table = gtk.Table(rows=1, columns=3, homogeneous=False)
-        table.attach(products_button, 0, 1, 0, 1)
-        table.attach(composition_button, 1, 2, 0, 1)
-        table.attach(exit_button, 2, 3, 0, 1)
-        switcher.append_page(table)
+        vbox = gtk.VBox(homogeneous=True)
+        vbox.pack_start(products_button)
+        vbox.pack_start(composition_button)
+        vbox.pack_start(exit_button)
+        switcher.append_page(vbox)
 
         # make widgets as attributes
         self.window = window
