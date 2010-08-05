@@ -33,7 +33,7 @@ def show_add_category_dialog(parent, data=None):
     dialog.add_button(_('Cancel'), gtk.RESPONSE_CANCEL)
 
     # creating widgets
-    table = gtk.Table(rows=1, columns=2, homogeneous=False)
+    table = gtk.Table(rows=1, columns=2, homogeneous=True)
     table.set_border_width(8)
     table.set_col_spacings(10)
     cname_label = gtk.Label(_('Category name'))
@@ -69,7 +69,7 @@ def show_add_product_dialog(parent, categories, data=None):
     table = gtk.Table(rows=4, columns=2, homogeneous=True)
     table.set_border_width(8)
     table.set_col_spacings(10)
-    table.set_row_spacings(6)
+    table.set_row_spacings(8)
     pname_label = gtk.Label(_('Product name'))
     pname_entry = gtk.Entry()
     pname_entry.set_name('entry_widget')
