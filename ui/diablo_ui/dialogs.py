@@ -23,11 +23,13 @@ def show_question_dialog(parent, title, question):
 def show_add_category_dialog(parent, data=None):
     """Shows AddCategory dialog."""
 
-    dialog = gtk.Dialog(title=_('Add new category'), parent=parent)
+    dialog = gtk.Dialog(parent=parent)
     if data is None:
         dialog.add_button(_('Add'), gtk.RESPONSE_OK)
+        dialog.set_title(_('Add new category'))
     else:
         dialog.add_button(_('Modify'), gtk.RESPONSE_OK)
+        dialog.set_title(_('Modify category'))
     dialog.add_button(_('Cancel'), gtk.RESPONSE_CANCEL)
 
     # creating widgets
@@ -54,14 +56,20 @@ def show_add_category_dialog(parent, data=None):
 
 def show_add_product_dialog(parent, categories, data=None):
     """Shows AddProduct dialog."""
-    dialog = gtk.Dialog(title=_('Add new product'), parent=parent, \
-        buttons=(_('Add'), gtk.RESPONSE_OK, _('Cancel'), \
-        gtk.RESPONSE_CANCEL))
+
+    dialog = gtk.Dialog(parent=parent)
+    if data is None:
+        dialog.add_button(_('Add'), gtk.RESPONSE_OK)
+        dialog.set_title(_('Add new product'))
+    else:
+        dialog.add_button(_('Modify'), gtk.RESPONSE_OK)
+        dialog.set_title(_('Modify product'))
+    dialog.add_button(_('Cancel'), gtk.RESPONSE_CANCEL)
     # creating widgets
-    table = gtk.Table(rows=4, columns=2, homogeneous=False)
+    table = gtk.Table(rows=4, columns=2, homogeneous=True)
     table.set_border_width(8)
     table.set_col_spacings(10)
-    table.set_row_spacings(4)
+    table.set_row_spacings(6)
     pname_label = gtk.Label(_('Product name'))
     pname_entry = gtk.Entry()
     pname_entry.set_name('entry_widget')
@@ -92,14 +100,14 @@ def show_add_product_dialog(parent, categories, data=None):
                 break
     # packing widgets
     table.attach(pname_label, 0, 1, 0, 1)
-    table.attach(pname_entry, 1, 2, 0, 1)
+    table.attach(pname_entry, 1, 2, 0, 1, xoptions=gtk.EXPAND|gtk.FILL)
     table.attach(pu_label, 0, 1, 1, 2)
-    table.attach(pu_entry, 1, 2, 1, 2)
+    table.attach(pu_entry, 1, 2, 1, 2, xoptions=gtk.EXPAND|gtk.FILL)
     table.attach(pi_label, 0, 1, 2, 3)
-    table.attach(pi_entry, 1, 2, 2, 3)
+    table.attach(pi_entry, 1, 2, 2, 3, xoptions=gtk.EXPAND|gtk.FILL)
     table.attach(category_label, 0, 1, 3, 4)
-    table.attach(combobox, 1, 2, 3, 4)
-    dialog.vbox.pack_start(table)
+    table.attach(combobox, 1, 2, 3, 4, xoptions=gtk.EXPAND|gtk.FILL)
+    dialog.vbox.pack_start(table, expand=True)
     dialog.vbox.show_all()
     response = dialog.run()
     # getting values
