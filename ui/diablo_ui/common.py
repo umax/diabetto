@@ -23,7 +23,8 @@ def cell_float_to_str(column, cell, model, iterator, index):
 def cell_capitalizer(column, cell, model, iterator, index):
     """Capitalizes cell text."""
 
-    cell.set_property('text', model[iterator][index].capitalize())
+    cell.set_property('text', \
+        model[iterator][index].decode('utf-8').capitalize())
     return
 
 
