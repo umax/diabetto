@@ -5,7 +5,8 @@ import gtk
 import pango
 from gettext import gettext as _
 from diabetto.constants import *
-from diabetto.ui.diablo_ui.common import create_button
+from diabetto.ui.diablo_ui.common import create_button, \
+    cell_capitalizer, cell_float_to_str, create_column
 from diabetto.ui.diablo_ui.dialogs import show_question_dialog, \
     show_add_category_dialog, show_add_product_dialog
 
@@ -23,7 +24,6 @@ class ProductsWidget:
         vbox = gtk.VBox()
         top_table = gtk.Table(rows=1, columns=7, homogeneous=True)
         bottom_table = gtk.Table(rows=1, columns=3, homogeneous=True)
-        #table = gtk.Table(rows=3, columns=6, homogeneous=False)
         categories_button = create_button(_('Categories'), \
             self.show_categories_cb)
         products_button = create_button(_('Products'), self.show_products_cb)
@@ -67,43 +67,21 @@ class ProductsWidget:
         cell.set_property('height', 70)
 
         if self.mode == CATEGORIES_MODE:
-            column = gtk.TreeViewColumn(_('Categories'))
-            self.treeview.append_column(column)
-            column.pack_start(cell, False)
-            column.add_attribute(cell, 'text', 0)
+            column = create_column(_('Categories'), cell, 0, \
+                cell_func=cell_capitalizer)
             column.set_sort_column_id(0)
+            self.treeview.append_column(column)
         else:
-            def float_to_str(column, cell, model, iterator, index):
-                cell.set_property('text', str(model[iterator][index]))
-                return
-
-            column1 = gtk.TreeViewColumn(_('Product'))
-            column1.set_expand(True)
-            column1.set_alignment(0.5)
-            column2 = gtk.TreeViewColumn(_('Carbohydrates'))
-            column2.set_expand(True)
-            column2.set_alignment(0.5)
-            column3 = gtk.TreeViewColumn(_('Index'))
-            column3.set_expand(True)
-            column3.set_alignment(0.5)
-            column4 = gtk.TreeViewColumn(_('Category'))
-            column4.set_expand(True)
-            column4.set_alignment(0.5)
-            self.treeview.append_column(column1)
-            self.treeview.append_column(column2)
-            self.treeview.append_column(column3)
-            self.treeview.append_column(column4)
-            column1.pack_start(cell, False)
-            column1.add_attribute(cell, 'text', 0)
+            column1 = create_column(_('Product'), cell, 0, \
+                cell_func=cell_float_to_str)
             column1.set_sort_column_id(0)
-            column2.pack_start(cell, False)
-            column2.add_attribute(cell, 'text', 1)
-            column2.set_cell_data_func(cell, float_to_str, 1)
-            column3.pack_start(cell, False)
-            column3.add_attribute(cell, 'text', 2)
-            column3.set_cell_data_func(cell, float_to_str, 2)
-            column4.pack_start(cell, False)
-            column4.add_attribute(cell, 'text', 4)
+            column2 = create_column(_('Carbohydrates'), cell, 1, \
+                cell_func=cell_float_to_str)
+            column3 = create_column(_('Index'), cell, 2, \
+                cell_func=cell_float_to_str)
+            column4 = create_column(_('Category'), cell, 4)
+            for column in (column1, column2, column3, column4):
+                self.treeview.append_column(column)
 
         self.treeview.set_model(content)
 
@@ -121,19 +99,18 @@ class ProductsWidget:
         self.mode = CATEGORIES_MODE
         # cname, cid
         liststore = gtk.ListStore(str, int)
-        for cname, cid in self.controller.get_categories():
-            liststore.append([cname.capitalize(), cid])
+        for category in self.controller.get_categories():
+            liststore.append(category)
         self._set_treeview_content(liststore)
 
-    def show_products_cb(self, widget):
+    def show_products_cb(self, widget, cid=None):
         """Shows all products."""
 
         self.mode = PRODUCTS_MODE
         # pname, pu, pi, pid, cname, cid
         liststore = gtk.ListStore(str, float, float, int, str, int)
-        for pname, pu, pi, pid, cname, cid in self.controller.get_products():
-            liststore.append([pname.capitalize(), pu, pi, pid, \
-                cname.capitalize(), cid])
+        for product in self.controller.get_products(cid):
+            liststore.append(product)
         self._set_treeview_content(liststore)
 
     def on_treeview_double_click_cb(self, widget, row, column):
@@ -142,14 +119,7 @@ class ProductsWidget:
         if self.mode == CATEGORIES_MODE:
             model = self.treeview.get_model()
             cid = model[row[0]][1]
-            self.mode = PRODUCTS_MODE
-            # pname, pu, pi, pid, cname, cid
-            liststore = gtk.ListStore(str, float, float, int, str, int)
-            for pname, pu, pi, pid, cname, cid in \
-                self.controller.get_products(cid):
-                liststore.append([pname.capitalize(), pu, pi, pid, \
-                    cname.capitalize(), cid])
-            self._set_treeview_content(liststore)
+            self.show_products_cb(None, cid)
 
     def add_cb(self, widget):
         """Adds new category or product."""
