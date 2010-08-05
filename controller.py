@@ -29,6 +29,20 @@ class Controller:
                 cname, cid])
         return result
 
+    def get_compositions(self):
+        """Gets all compositions from database and calculate its params."""
+
+        model = self.model # accelerate database operations
+        result = []
+        for compname, compid, chunks in model.get_compositions():
+            carbohydrates = 0
+            for pid, pweight in model.get_composition_content(compid):
+                pname, pu, pi = model.get_product_by_id(pid)
+                carbohydrates += (pu / 100.0 * pweight)
+            result.append( \
+                (compname, carbohydrates, chunks, carbohydrates/chunks, compid))
+        return result
+
     def add_category(self, cname):
         """Adds new category to database."""
 
@@ -61,3 +75,18 @@ class Controller:
         """Removes product."""
 
         self.model.del_product(pid)
+
+    def add_composition(self, compname, chunks):
+        """Adds new composition to database."""
+
+        self.model.add_composition(compname, chunks)
+
+    def update_composition(self, compid, compname, chunks):
+        """Updates existing composition."""
+
+        self.model.update_composition(compid, compname, chunks)
+
+    def remove_composition(self, compid):
+        """Removes composition."""
+
+        self.model.del_composition(compid)

@@ -5,6 +5,7 @@ import gtk
 from gettext import gettext as _
 from diabetto.ui.diablo_ui.common import create_button
 from diabetto.ui.diablo_ui.products import ProductsWidget
+from diabetto.ui.diablo_ui.compositions import CompositionsWidget
 
 
 class MainWidget:
@@ -58,4 +59,4 @@ class MainWidget:
         ProductsWidget(self.controller, self.switcher, self.window)
 
     def create_composition_widget_cb(self, widget):
-        pass
+        CompositionsWidget(self.controller, self.switcher, self.window)

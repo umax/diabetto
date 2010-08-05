@@ -24,6 +24,21 @@ SCHEMA = """
     );
     create index i_categories on categories (cid);
     insert into categories values(NULL, 'default');
+
+    create table compositions(
+        compid integer primary key,
+        compname text,
+        chunks integer
+    );
+    create index i_compositions on compositions (compid);
+
+    create table composition_content(
+        compid integer,
+        pid integer,
+        pweight integer
+    );
+    create index i_composition_content on composition_content (compid);
+
     commit;
 """
 
@@ -87,7 +102,7 @@ class Database:
         self.save()
 
     def update_category(self, cname, cid):
-        """Updates existing  category."""
+        """Updates existing category."""
 
         self.conn.execute("""UPDATE categories SET cname=? WHERE cid=?""", \
             (cname.lower(), cid))
@@ -104,6 +119,31 @@ class Database:
             execute("""UPDATE products SET cid=1 WHERE cid=?""", (cid,))
         self.save()
 
+    def add_composition(self, compname, chunks):
+        """Adds new composition."""
+
+        execute = self.conn.execute
+        if execute("""SELECT compname FROM compositions WHERE \
+            compname LIKE '%s'""" % compname.lower()).fetchone() is None:
+            execute("""INSERT INTO compositions values(NULL, ?, ?)""", \
+                (compname.lower(), chunks))
+        self.save()
+
+    def update_composition(self, compid, compname, chunks):
+        """Updates exisiting composition."""
+
+        self.conn.execute("""UPDATE compositions SET compname=?, chunks=? \
+            WHERE compid=?""", (compname, chunks, compid))
+        self.save()
+
+    def del_composition(self, compid):
+        """Removes composition and its content from database."""
+
+        execute = self.conn.execute
+        execute("""DELETE FROM compositions WHERE compid=?""", (compid,))
+        execute("""DELETE FROM composition_content WHERE compid=?""", (compid,))
+        self.save()
+
     def get_products(self, cid):
         """Gets all products."""
 
@@ -113,6 +153,18 @@ class Database:
         else:
             return self.conn.execute("""SELECT pname, pu, pi, cid, pid FROM \
                 products WHERE cid=?""", (cid,)).fetchall()
+
+    def get_compositions(self):
+        """Gets all compositions."""
+
+        return self.conn.execute("""SELECT compname, compid, chunks FROM \
+            compositions""").fetchall()
+
+    def get_composition_content(self, compid):
+        """Gets all composition products."""
+
+        return self.conn.execute("""SELECT pid, pweight FROM \
+            composition_content WHERE compid=?""", (compid,)).fetchall()
 
     def get_categories(self):
         """Gets all categories."""
@@ -125,6 +177,12 @@ class Database:
 
         return self.conn.execute("""SELECT cname, cid FROM categories \
             WHERE cid=?""", (cid,)).fetchone()
+
+    def get_product_by_id(self, pid):
+        """Gets product details by it id."""
+
+        return self.conn.execute("""SELECT pname, pu, pi FROM products \
+            WHERE pid=?""", (pid,)).fetchone()
 
 
 if __name__ == "__main__":

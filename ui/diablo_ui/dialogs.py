@@ -20,6 +20,55 @@ def show_question_dialog(parent, title, question):
     return False
 
 
+def show_add_composition_dialog(parent, data=None):
+    """Shows AddComposition dialog."""
+
+    dialog = gtk.Dialog(parent=parent)
+    if data is None:
+        dialog.add_button(_('Add'), gtk.RESPONSE_OK)
+        dialog.set_title(_('Add new composition'))
+    else:
+        dialog.add_button(_('Modify'), gtk.RESPONSE_OK)
+        dialog.set_title(_('Modify composition'))
+    dialog.add_button(_('Cancel'), gtk.RESPONSE_CANCEL)
+
+    # creating widgets
+    table = gtk.Table(rows=2, columns=2, homogeneous=True)
+    table.set_border_width(8)
+    table.set_col_spacings(10)
+    compname_label = gtk.Label(_('Composition name'))
+    compname_entry = gtk.Entry()
+    compname_entry.set_name('entry_widget')
+    chunks_label = gtk.Label(_('Chunks'))
+    chunks_entry = gtk.Entry()
+    chunks_entry.set_text('3')
+    if data:
+        compname_entry.set_text(data[0])
+        chunks_entry.set_text(str(data[1]))
+    # packing widgets
+    table.attach(compname_label, 0, 1, 0, 1)
+    table.attach(compname_entry, 1, 2, 0, 1, ypadding=gtk.EXPAND|gtk.FILL)
+    table.attach(chunks_label, 0, 1, 1, 2)
+    table.attach(chunks_entry, 1, 2, 1, 2, ypadding=gtk.EXPAND|gtk.FILL)
+    dialog.vbox.pack_start(table, padding=8)
+    dialog.vbox.show_all()
+    response = dialog.run()
+    try:
+        compname = compname_entry.get_text()
+        chunks = int(chunks_entry.get_text())
+        if chunks == 0:
+            chunks = 3
+    except:
+        dialog.destroy()
+        return None, None
+    else:
+        dialog.destroy()
+        if response == gtk.RESPONSE_OK:
+            return compname, chunks
+        else:
+            return None, None
+
+
 def show_add_category_dialog(parent, data=None):
     """Shows AddCategory dialog."""
 
