@@ -29,6 +29,22 @@ class Controller:
                 cname, cid])
         return result
 
+    def get_products_list(self):
+        """Gets product list."""
+
+        return [(pname, pid) for pname, pu, pi, cid, pid in \
+            self.model.get_products(None)]
+
+    def get_composition_content(self, compid):
+        """Gets all composition products."""
+
+        model = self.model # accelerate database operations
+        result = []
+        for pid, pweight in model.get_composition_content(compid):
+            pname, pu, pi = model.get_product_by_id(pid)
+            result.append((pname, pweight, pid))
+        return result
+
     def get_compositions(self):
         """Gets all compositions from database and calculate its params."""
 
@@ -66,15 +82,30 @@ class Controller:
             return
         self.model.add_product(pname, pu, pi, cid)
 
+    def add_product_to_composition(self, compid, pid, pweight):
+        """Adds new products to existing composition."""
+
+        self.model.add_product_to_composition(compid, pid, pweight)
+
     def update_product(self, pname, pu, pi, pid, cid):
         """Updates existing product."""
 
         self.model.update_product(pname, pu, pi, pid, cid)
 
+    def update_product_in_composition(self, compid, pid, pweight):
+        """Updates product properties in composition."""
+
+        self.model.update_product_in_composition(compid, pid, pweight)
+
     def remove_product(self, pid):
-        """Removes product."""
+        """Removes existing product."""
 
         self.model.del_product(pid)
+
+    def remove_product_from_composition(self, compid, pid):
+        """Removes existing product from existing composition."""
+
+        self.model.del_product_from_composition(compid, pid)
 
     def add_composition(self, compname, chunks):
         """Adds new composition to database."""
@@ -87,6 +118,6 @@ class Controller:
         self.model.update_composition(compid, compname, chunks)
 
     def remove_composition(self, compid):
-        """Removes composition."""
+        """Removes existing composition."""
 
         self.model.del_composition(compid)

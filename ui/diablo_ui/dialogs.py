@@ -21,7 +21,10 @@ def show_question_dialog(parent, title, question):
 
 
 def show_add_composition_dialog(parent, data=None):
-    """Shows AddComposition dialog."""
+    """
+    Shows AddComposition dialog.
+    data: (compname, chunks)
+    """
 
     dialog = gtk.Dialog(parent=parent)
     if data is None:
@@ -41,10 +44,14 @@ def show_add_composition_dialog(parent, data=None):
     compname_entry.set_name('entry_widget')
     chunks_label = gtk.Label(_('Chunks'))
     chunks_entry = gtk.Entry()
+    chunks_entry.set_name('entry_widget')
     chunks_entry.set_text('3')
+
+    # checking for edit mode
     if data:
         compname_entry.set_text(data[0])
         chunks_entry.set_text(str(data[1]))
+
     # packing widgets
     table.attach(compname_label, 0, 1, 0, 1)
     table.attach(compname_entry, 1, 2, 0, 1, ypadding=gtk.EXPAND|gtk.FILL)
@@ -53,20 +60,85 @@ def show_add_composition_dialog(parent, data=None):
     dialog.vbox.pack_start(table, padding=8)
     dialog.vbox.show_all()
     response = dialog.run()
-    try:
-        compname = compname_entry.get_text()
-        chunks = int(chunks_entry.get_text())
-        if chunks == 0:
-            chunks = 3
-    except:
-        dialog.destroy()
-        return None, None
-    else:
-        dialog.destroy()
-        if response == gtk.RESPONSE_OK:
-            return compname, chunks
+    compname = compname_entry.get_text()
+    if response == gtk.RESPONSE_OK:
+        try:
+            chunks = int(chunks_entry.get_text())
+            if chunks == 0:
+                chunks = 3
+        except:
+            pass
         else:
-            return None, None
+            dialog.destroy()
+            return compname, chunks
+    dialog.destroy()
+    return None, None
+
+
+def show_add_product_to_composition_dialog(parent, products, data=None):
+    """
+    Shows AddProductToCompositions dialog.
+    products: (pname, pid)
+    data: (pname, pweight, pid)
+    """
+
+    dialog = gtk.Dialog(parent=parent)
+    if data is None:
+        dialog.add_button(_('Add'), gtk.RESPONSE_OK)
+        dialog.set_title(_('Add new product to composition'))
+    else:
+        dialog.add_button(_('Modify'), gtk.RESPONSE_OK)
+        dialog.set_title(_('Modify product in composition'))
+    dialog.add_button(_('Cancel'), gtk.RESPONSE_CANCEL)
+
+    # creating widgets
+    table = gtk.Table(rows=2, columns=2, homogeneous=True)
+    table.set_border_width(8)
+    table.set_col_spacings(10)
+    pname_label = gtk.Label(_('Product name'))
+    pweight_label = gtk.Label(_('Product weight'))
+    pweight_entry = gtk.Entry()
+    pweight_entry.set_text('0')
+    pweight_entry.set_name('entry_widget')
+
+    # populating category list
+    liststore = gtk.ListStore(str, int)
+    for pname, pid in products:
+        liststore.append([pname, pid])
+    combobox = gtk.ComboBox(liststore)
+    cell = gtk.CellRendererText()
+    combobox.pack_start(cell, False)
+    combobox.add_attribute(cell, 'text', 0)
+    combobox.set_active(0)
+
+    # cheking for edit mode
+    if data is not None:
+        pweight_entry.set_text(str(data[1]))
+        for index in range(len(liststore)):
+            if liststore[index][1] == data[2]:
+                combobox.set_active(index)
+                break
+
+    # packing widgets
+    table.attach(pname_label, 0, 1, 0, 1)
+    table.attach(combobox, 1, 2, 0, 1, ypadding=gtk.EXPAND|gtk.FILL)
+    table.attach(pweight_label, 0, 1, 1, 2)
+    table.attach(pweight_entry, 1, 2, 1, 2, ypadding=gtk.EXPAND|gtk.FILL)
+    dialog.vbox.pack_start(table, padding=8)
+    dialog.vbox.show_all()
+    response = dialog.run()
+    if response == gtk.RESPONSE_OK:
+        try:
+            pweight = int(pweight_entry.get_text())
+        except:
+            pass
+        else:
+            model, active = combobox.get_model(), combobox.get_active()
+            pid = model[active][1]
+            dialog.destroy()
+            return pid, pweight
+    dialog.destroy()
+    return None, None
 
 
 def show_add_category_dialog(parent, data=None):
@@ -114,6 +186,7 @@ def show_add_product_dialog(parent, categories, data=None):
         dialog.add_button(_('Modify'), gtk.RESPONSE_OK)
         dialog.set_title(_('Modify product'))
     dialog.add_button(_('Cancel'), gtk.RESPONSE_CANCEL)
+
     # creating widgets
     table = gtk.Table(rows=4, columns=2, homogeneous=True)
     table.set_border_width(8)
@@ -129,6 +202,7 @@ def show_add_product_dialog(parent, categories, data=None):
     pi_entry = gtk.Entry()
     pi_entry.set_name('entry_widget')
     category_label = gtk.Label(_('Category'))
+
     # populating category list
     liststore = gtk.ListStore(str, int)
     for cname, cid in categories:
@@ -138,6 +212,7 @@ def show_add_product_dialog(parent, categories, data=None):
     combobox.pack_start(cell, False)
     combobox.add_attribute(cell, 'text', 0)
     combobox.set_active(0)
+
     # cheking for edit mode
     if data is not None: # edit mode
         pname_entry.set_text(data[0])
@@ -147,6 +222,7 @@ def show_add_product_dialog(parent, categories, data=None):
             if liststore[index][1] == data[3]:
                 combobox.set_active(index)
                 break
+
     # packing widgets
     table.attach(pname_label, 0, 1, 0, 1)
     table.attach(pname_entry, 1, 2, 0, 1, xoptions=gtk.EXPAND|gtk.FILL)
@@ -159,19 +235,17 @@ def show_add_product_dialog(parent, categories, data=None):
     dialog.vbox.pack_start(table, expand=True)
     dialog.vbox.show_all()
     response = dialog.run()
-    # getting values
-    pname = pname_entry.get_text()
-    try:
-        pu = float(pu_entry.get_text().replace(',', '.'))
-        pi = float(pi_entry.get_text().replace(',', '.'))
-    except:
-        dialog.destroy()
-        return None, None, None, None
-    model, active = combobox.get_model(), combobox.get_active()
-    cid = model[active][1]
+    if response == gtk.RESPONSE_OK:
+        pname = pname_entry.get_text()
+        try:
+            pu = float(pu_entry.get_text().replace(',', '.'))
+            pi = float(pi_entry.get_text().replace(',', '.'))
+        except:
+            pass
+        else:
+            model, active = combobox.get_model(), combobox.get_active()
+            cid = model[active][1]
+            dialog.destroy()
+            return pname, pu, pi, cid
     dialog.destroy()
-    if response == gtk.RESPONSE_OK and pname:
-        return pname, pu, pi, cid
     return None, None, None, None
-
-

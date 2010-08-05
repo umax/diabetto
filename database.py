@@ -78,6 +78,13 @@ class Database:
                 (pname.lower(), pu, pi, cid))
         self.save()
 
+    def add_product_to_composition(self, compid, pid, pweight):
+        """Adds product to existing composition."""
+
+        self.conn.execute("""INSERT INTO composition_content values(?,?,?)""", \
+            (compid, pid, pweight))
+        self.save()
+
     def update_product(self, pname, pu, pi, pid, cid):
         """Updates existing product."""
 
@@ -85,10 +92,24 @@ class Database:
             WHERE pid=?""", (pname, pu, pi, cid, pid))
         self.save()
 
+    def update_product_in_composition(self, compid, pid, pweight):
+        """Updates product properties in composition."""
+
+        self.conn.execute("""UPDATE composition_content SET pweight=? WHERE \
+            compid=? AND pid=?""", (pweight, compid, pid))
+        self.save()
+
     def del_product(self, pid):
         """Remove product from database."""
 
         self.conn.execute("""DELETE FROM products WHERE pid=?""", (pid,))
+        self.save()
+
+    def del_product_from_composition(self, compid, pid):
+        """Removes existing product from existing composition."""
+
+        self.conn.execute("""DELETE FROM composition_content WHERE compid=? \
+            AND pid=?""", (compid, pid))
         self.save()
 
     def add_category(self, cname):
