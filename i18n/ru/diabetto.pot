@@ -17,7 +17,7 @@ msgid "Categories"
 msgstr "Категории"
 
 msgid "Menu"
-msgstr "Главное меню"
+msgstr "Меню"
 
 msgid "Add"
 msgstr "Добавить"
@@ -70,8 +70,14 @@ msgstr "Название категории"
 msgid "Add new category"
 msgstr "Добавление новой категории"
 
+msgid "Modify category"
+msgstr "Редактирование категории"
+
 msgid "Add new product"
 msgstr "Добавление нового продукта"
+
+msgid "Modify product"
+msgstr "Редактирование продукта"
 
 msgid "Product name"
 msgstr "Название продукта"
