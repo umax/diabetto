@@ -105,8 +105,8 @@ def show_add_product_dialog(parent, categories, data=None):
     # getting values
     pname = pname_entry.get_text()
     try:
-        pu = int(pu_entry.get_text())
-        pi = int(pi_entry.get_text())
+        pu = float(pu_entry.get_text().replace(',', '.'))
+        pi = float(pi_entry.get_text().replace(',', '.'))
     except:
         dialog.destroy()
         return None, None, None, None

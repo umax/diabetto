@@ -12,8 +12,8 @@ SCHEMA = """
     create table products(
         pid integer primary key,
         pname text,
-        pu integer,
-        pi integer,
+        pu real,
+        pi real,
         cid integer
     );
     create index i_products on products (pid);

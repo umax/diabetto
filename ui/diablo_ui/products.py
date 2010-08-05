@@ -20,7 +20,10 @@ class ProductsWidget:
         self.mode = CATEGORIES_MODE
 
         # create widgets
-        table = gtk.Table(rows=3, columns=6, homogeneous=False)
+        vbox = gtk.VBox()
+        top_table = gtk.Table(rows=1, columns=7, homogeneous=True)
+        bottom_table = gtk.Table(rows=1, columns=3, homogeneous=True)
+        #table = gtk.Table(rows=3, columns=6, homogeneous=False)
         categories_button = create_button(_('Categories'), \
             self.show_categories_cb)
         products_button = create_button(_('Products'), self.show_products_cb)
@@ -35,15 +38,17 @@ class ProductsWidget:
         scrolled_window.set_border_width(2)
         scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_ALWAYS)
         scrolled_window.add_with_viewport(self.treeview)
-        table.attach(categories_button, 0, 2, 0, 1, yoptions=gtk.SHRINK)
-        table.attach(products_button, 2, 4, 0, 1, yoptions=gtk.SHRINK)
-        table.attach(menu_button, 4, 6, 0, 1, yoptions=gtk.SHRINK)
-        table.attach(scrolled_window, 0, 6, 1, 2, yoptions=gtk.EXPAND|gtk.FILL)
-        table.attach(add_button, 0, 2, 2, 3, yoptions=gtk.SHRINK)
-        table.attach(edit_button, 2, 4, 2, 3, yoptions=gtk.SHRINK)
-        table.attach(remove_button, 4, 6, 2, 3, yoptions=gtk.SHRINK)
-        table.show_all()
-        self.page = self.switcher.append_page(table)
+        top_table.attach(categories_button, 0, 3, 0, 1)
+        top_table.attach(products_button, 3, 6, 0, 1)
+        top_table.attach(menu_button, 6, 7, 0, 1)
+        bottom_table.attach(add_button, 0, 1, 0, 1)
+        bottom_table.attach(edit_button, 1, 2, 0, 1)
+        bottom_table.attach(remove_button, 2, 3, 0, 1)
+        vbox.pack_start(top_table, expand=False)
+        vbox.pack_start(scrolled_window)
+        vbox.pack_start(bottom_table, expand=False)
+        vbox.show_all()
+        self.page = self.switcher.append_page(vbox)
         self.switcher.set_current_page(self.page)
 
         # show categories at startup
@@ -68,10 +73,22 @@ class ProductsWidget:
             column.add_attribute(cell, 'text', 0)
             column.set_sort_column_id(0)
         else:
+            def float_to_str(column, cell, model, iterator, index):
+                cell.set_property('text', str(model[iterator][index]))
+                return
+
             column1 = gtk.TreeViewColumn(_('Product'))
+            column1.set_expand(True)
+            column1.set_alignment(0.5)
             column2 = gtk.TreeViewColumn(_('Carbohydrates'))
+            column2.set_expand(True)
+            column2.set_alignment(0.5)
             column3 = gtk.TreeViewColumn(_('Index'))
+            column3.set_expand(True)
+            column3.set_alignment(0.5)
             column4 = gtk.TreeViewColumn(_('Category'))
+            column4.set_expand(True)
+            column4.set_alignment(0.5)
             self.treeview.append_column(column1)
             self.treeview.append_column(column2)
             self.treeview.append_column(column3)
@@ -81,8 +98,10 @@ class ProductsWidget:
             column1.set_sort_column_id(0)
             column2.pack_start(cell, False)
             column2.add_attribute(cell, 'text', 1)
+            column2.set_cell_data_func(cell, float_to_str, 1)
             column3.pack_start(cell, False)
             column3.add_attribute(cell, 'text', 2)
+            column3.set_cell_data_func(cell, float_to_str, 2)
             column4.pack_start(cell, False)
             column4.add_attribute(cell, 'text', 4)
 
@@ -111,10 +130,10 @@ class ProductsWidget:
 
         self.mode = PRODUCTS_MODE
         # pname, pu, pi, pid, cname, cid
-        liststore = gtk.ListStore(str, int, int, int, str, int)
+        liststore = gtk.ListStore(str, float, float, int, str, int)
         for pname, pu, pi, pid, cname, cid in self.controller.get_products():
             liststore.append([pname.capitalize(), pu, pi, pid, \
-            cname.capitalize(), cid])
+                cname.capitalize(), cid])
         self._set_treeview_content(liststore)
 
     def on_treeview_double_click_cb(self, widget, row, column):
@@ -125,10 +144,11 @@ class ProductsWidget:
             cid = model[row[0]][1]
             self.mode = PRODUCTS_MODE
             # pname, pu, pi, pid, cname, cid
-            liststore = gtk.ListStore(str, int, int, int, str, int)
+            liststore = gtk.ListStore(str, float, float, int, str, int)
             for pname, pu, pi, pid, cname, cid in \
                 self.controller.get_products(cid):
-                liststore.append([pname, pu, pi, pid, cname, cid])
+                liststore.append([pname.capitalize(), pu, pi, pid, \
+                    cname.capitalize(), cid])
             self._set_treeview_content(liststore)
 
     def add_cb(self, widget):
