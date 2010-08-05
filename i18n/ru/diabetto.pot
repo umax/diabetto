@@ -82,4 +82,49 @@ msgstr "Редактирование продукта"
 msgid "Product name"
 msgstr "Название продукта"
 
+msgid "Add new composition"
+msgstr "Добавление нового блюда"
+
+msgid "Modify composition"
+msgstr "Редактирование блюда"
+
+msgid "Composition name"
+msgstr "Название блюда"
+
+msgid "Chunks"
+msgstr "Количество порций"
+
+msgid "Add new product to composition"
+msgstr "Добавление продукта в блюдо"
+
+msgid "Modify product in composition"
+msgstr "Редактирование продукта блюда"
+
+msgid "Product weight"
+msgstr "Вес (в граммах)"
+
+msgid "Carbohydrates per chunk"
+msgstr "Углеводов на порцию"
+
+msgid "Weight"
+msgstr "Вес (в граммах)"
+
+msgid "Compositions number"
+msgstr "Количество блюд"
+
+msgid "Products number"
+msgstr "Количество продуктов"
+
+msgid "Back"
+msgstr "Назад"
+
+msgid "Composition removing"
+msgstr "Удаление блюда"
+
+msgid "Do you want to remove selected composition?"
+msgstr "Удалить выбранное блюдо?"
+
+msgid "Do you want to remove selected product from composition?"
+msgstr "Удалить выбранный продукт из блюда?"
+
 
