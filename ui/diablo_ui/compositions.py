@@ -153,7 +153,7 @@ class CompositionsWidget:
         else:
             pid, pweight = show_add_product_to_composition_dialog( \
                 self.window, self.controller.get_products_list())
-            if pweight:
+            if pweight is not None:
                 self.controller.add_product_to_composition( \
                     self.compid, pid, pweight)
             self._show_products_in_composition()
@@ -211,7 +211,7 @@ class CompositionsWidget:
                 pid, pweight = show_add_product_to_composition_dialog( \
                     self.window, self.controller.get_products_list(), \
                     (pname, pweight, pid))
-                if pweight:
+                if pweight is not None:
                     self.controller.update_product_in_composition( \
                         self.compid, pid, pweight)
                     self._show_products_in_composition()
