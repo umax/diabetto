@@ -118,6 +118,7 @@ def show_add_product_to_composition_dialog(parent, products, data=None):
             if liststore[index][1] == data[2]:
                 combobox.set_active(index)
                 break
+        combobox.set_sensitive(False)
 
     # packing widgets
     table.attach(pname_label, 0, 1, 0, 1)
