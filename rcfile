@@ -9,6 +9,7 @@ style "scrolled-window" {
     GtkRange::trough-border = 0
 }
 widget "*.scrolled_window.GtkVScrollbar" style "scrolled-window"
+widget "*.scrolled_window.GtkHScrollbar" style "scrolled-window"
 
 style "entry" {
     engine "pixmap" {}
