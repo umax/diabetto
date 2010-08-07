@@ -28,7 +28,7 @@ def create_button(caption, callback, width=-1, height=70, stock=None):
 def cell_float_to_str(column, cell, model, iterator, index):
     """Formats float number."""
 
-    cell.set_property('text', str(model[iterator][index]))
+    cell.set_property('text', '%.2f' % model[iterator][index])
     return
 
 
