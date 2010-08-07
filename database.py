@@ -102,7 +102,9 @@ class Database:
     def del_product(self, pid):
         """Remove product from database."""
 
-        self.conn.execute("""DELETE FROM products WHERE pid=?""", (pid,))
+        execute = self.conn.execute
+        execute("""DELETE FROM products WHERE pid=?""", (pid,))
+        execute("""DELETE FROM composition_content WHERE pid=?""", (pid,))
         self.save()
 
     def del_product_from_composition(self, compid, pid):
