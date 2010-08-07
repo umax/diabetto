@@ -4,10 +4,21 @@
 import gtk
 
 
-def create_button(caption, callback, width=-1, height=70):
+def create_button(caption, callback, width=-1, height=70, stock=None):
     """Creates customized button."""
 
-    button = gtk.Button(caption)
+    button = gtk.Button()
+    if stock is not None:
+        hbox = gtk.HBox(False, 0)
+        image = gtk.image_new_from_stock(stock, gtk.ICON_SIZE_LARGE_TOOLBAR)
+        hbox.pack_start(image)
+        if caption is not None:
+            label = gtk.Label(caption)
+            label.set_justify(gtk.JUSTIFY_LEFT)
+            hbox.pack_start(label)
+        button.add(hbox)
+    else:
+        button.set_label(caption)
     button.set_size_request(width, height)
     button.connect('clicked', callback)
     return button

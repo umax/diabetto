@@ -9,9 +9,15 @@ def show_question_dialog(parent, title, question):
     """Shows Question dialog."""
 
     dialog = gtk.Dialog(title=title, parent=parent, buttons=( \
-        _('Yes'), gtk.RESPONSE_YES, _('No'), gtk.RESPONSE_NO))
+        _('Yes'), gtk.RESPONSE_YES, _('No'), gtk.RESPONSE_NO), \
+        flags=gtk.DIALOG_NO_SEPARATOR)
     label = gtk.Label('\n' + question + '\n')
-    dialog.vbox.pack_start(label)
+    image = gtk.image_new_from_stock(gtk.STOCK_DIALOG_QUESTION, \
+        gtk.ICON_SIZE_DIALOG)
+    hbox = gtk.HBox(False, 8)
+    hbox.pack_start(image)
+    hbox.pack_start(label, padding=4)
+    dialog.vbox.pack_start(hbox)
     dialog.vbox.show_all()
     response = dialog.run()
     dialog.destroy()
@@ -26,7 +32,7 @@ def show_add_composition_dialog(parent, data=None):
     data: (compname, chunks)
     """
 
-    dialog = gtk.Dialog(parent=parent)
+    dialog = gtk.Dialog(parent=parent, flags=gtk.DIALOG_NO_SEPARATOR)
     if data is None:
         dialog.add_button(_('Add'), gtk.RESPONSE_OK)
         dialog.set_title(_('Add new composition'))
@@ -82,7 +88,7 @@ def show_add_product_to_composition_dialog(parent, products, data=None):
     data: (pname, pweight, pid)
     """
 
-    dialog = gtk.Dialog(parent=parent)
+    dialog = gtk.Dialog(parent=parent, flags=gtk.DIALOG_NO_SEPARATOR)
     if data is None:
         dialog.add_button(_('Add'), gtk.RESPONSE_OK)
         dialog.set_title(_('Add new product to composition'))
@@ -145,7 +151,7 @@ def show_add_product_to_composition_dialog(parent, products, data=None):
 def show_add_category_dialog(parent, data=None):
     """Shows AddCategory dialog."""
 
-    dialog = gtk.Dialog(parent=parent)
+    dialog = gtk.Dialog(parent=parent, flags=gtk.DIALOG_NO_SEPARATOR)
     if data is None:
         dialog.add_button(_('Add'), gtk.RESPONSE_OK)
         dialog.set_title(_('Add new category'))
@@ -179,7 +185,7 @@ def show_add_category_dialog(parent, data=None):
 def show_add_product_dialog(parent, categories, data=None):
     """Shows AddProduct dialog."""
 
-    dialog = gtk.Dialog(parent=parent)
+    dialog = gtk.Dialog(parent=parent, flags=gtk.DIALOG_NO_SEPARATOR)
     if data is None:
         dialog.add_button(_('Add'), gtk.RESPONSE_OK)
         dialog.set_title(_('Add new product'))

@@ -26,16 +26,20 @@ class CompositionsWidget:
         top_table = gtk.Table(rows=1, columns=7, homogeneous=True)
         bottom_table = gtk.Table(rows=1, columns=3, homogeneous=True)
         self.info_label = gtk.Label()
-        self.menu_button = create_button(_('Menu'), self.show_menu_cb)
-        add_button = create_button(_('Add'), self.add_cb)
-        remove_button = create_button(_('Remove'), self.remove_cb)
-        edit_button = create_button(_('Edit'), self.edit_cb)
+        self.menu_button = create_button(None, self.show_menu_cb, \
+            stock=gtk.STOCK_GO_BACK)
+        add_button = create_button(_('Add'), self.add_cb, stock=gtk.STOCK_ADD)
+        remove_button = create_button(_('Remove'), self.remove_cb, \
+            stock=gtk.STOCK_DELETE)
+        edit_button = create_button(_('Edit'), self.edit_cb, \
+            stock=gtk.STOCK_EDIT)
         self.treeview = gtk.TreeView()
+        self.treeview.set_headers_visible(True)
         self.treeview.connect('row-activated', self.on_treeview_double_click_cb)
         scrolled_window = gtk.ScrolledWindow()
         scrolled_window.set_name('scrolled_window')
         scrolled_window.set_border_width(2)
-        scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_ALWAYS)
+        scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
         scrolled_window.add_with_viewport(self.treeview)
         top_table.attach(self.info_label, 0, 6, 0, 1)
         top_table.attach(self.menu_button, 6, 7, 0, 1)
@@ -43,6 +47,9 @@ class CompositionsWidget:
         bottom_table.attach(edit_button, 1, 2, 0, 1)
         bottom_table.attach(remove_button, 2, 3, 0, 1)
         vbox.pack_start(top_table, expand=False)
+        separator = gtk.HSeparator()
+        separator.set_size_request(-1, 1)
+        vbox.pack_start(separator, expand=False)
         vbox.pack_start(scrolled_window)
         vbox.pack_start(bottom_table, expand=False)
         vbox.show_all()
@@ -103,7 +110,7 @@ class CompositionsWidget:
         # update widgets
         self.info_label.set_text( \
             '%s: %s' % (_('Compositions number'), len(liststore)))
-        self.menu_button.set_label(_('Menu'))
+        #self.menu_button.set_label(_('Menu'))
 
     def _show_products_in_composition(self):
         """Shows products for composition."""
@@ -117,7 +124,7 @@ class CompositionsWidget:
         # update widgets
         self.info_label.set_text( \
             '%s: %s' % (_('Products number'), len(liststore)))
-        self.menu_button.set_label(_('Back'))
+        #self.menu_button.set_label(_('Back'))
 
 
     # callbacks

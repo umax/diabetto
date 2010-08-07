@@ -23,7 +23,7 @@ class MainWidget:
         window.add(switcher)
         products_button = create_button(_('Products'), \
             self.create_products_widget_cb, 70, 70)
-        composition_button = create_button(_('Composition'), \
+        composition_button = create_button(_('Compositions'), \
             self.create_composition_widget_cb, 70, 70)
         exit_button = create_button(_('Exit'), self.exit_cb, 70, 70)
         vbox = gtk.VBox(homogeneous=True)
