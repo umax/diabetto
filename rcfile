@@ -16,3 +16,12 @@ style "entry" {
     font_name = "Nokia Sans 24"
 }
 widget "*.entry_widget" style "entry"
+
+style "colored-button" {
+    engine "pixmap" {}
+    bg[ACTIVE] = "#9fff8f"
+    bg[SELECTED] = "#9fff8f"
+    bg[PRELIGHT] = "#9fff8f"
+    bg[NORMAL] = "#9fff8f"
+}
+widget "*.color_button" style "colored-button"

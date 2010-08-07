@@ -16,6 +16,7 @@ class ProductsWidget:
         self.switcher = switcher
         self.controller = controller
         self.window = toplevel_window
+        self.cid = None
         self.page = None
         self.treeview = None
         self.mode = CATEGORIES_MODE
@@ -26,7 +27,9 @@ class ProductsWidget:
         bottom_table = gtk.Table(rows=1, columns=3, homogeneous=True)
         categories_button = create_button(_('Categories'), \
             self.show_categories_cb)
+        categories_button.set_name('color_button')
         products_button = create_button(_('Products'), self.show_products_cb)
+        products_button.set_name('color_button')
         menu_button = create_button(None, self.show_menu_cb, \
             stock=gtk.STOCK_GO_BACK)
         add_button = create_button(_('Add'), self.add_cb, stock=gtk.STOCK_ADD)
@@ -34,14 +37,14 @@ class ProductsWidget:
             stock=gtk.STOCK_DELETE)
         edit_button = create_button(_('Edit'), self.edit_cb, \
             stock=gtk.STOCK_EDIT)
-        self.treeview = gtk.TreeView()
-        self.treeview.set_headers_visible(True)
-        self.treeview.connect('row-activated', self.on_treeview_double_click_cb)
+        treeview = gtk.TreeView()
+        treeview.set_headers_visible(True)
+        treeview.connect('row-activated', self.on_treeview_double_click_cb)
         scrolled_window = gtk.ScrolledWindow()
         scrolled_window.set_name('scrolled_window')
         scrolled_window.set_border_width(2)
         scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-        scrolled_window.add_with_viewport(self.treeview)
+        scrolled_window.add_with_viewport(treeview)
         top_table.attach(categories_button, 0, 3, 0, 1)
         top_table.attach(products_button, 3, 6, 0, 1)
         top_table.attach(menu_button, 6, 7, 0, 1)
@@ -55,7 +58,10 @@ class ProductsWidget:
         vbox.pack_start(scrolled_window)
         vbox.pack_start(bottom_table, expand=False)
         vbox.show_all()
+        self.treeview = treeview
         self.page = self.switcher.append_page(vbox)
+        self.products_button = products_button
+        self.categories_button = categories_button
         self.switcher.set_current_page(self.page)
 
         # show categories at startup
@@ -105,6 +111,9 @@ class ProductsWidget:
         """Shows all categories."""
 
         self.mode = CATEGORIES_MODE
+        self.cid = None
+        self.products_button.set_name('')
+        self.categories_button.set_name('color_button')
         # cname, cid
         liststore = gtk.ListStore(str, int)
         for category in self.controller.get_categories():
@@ -115,6 +124,8 @@ class ProductsWidget:
         """Shows all products."""
 
         self.mode = PRODUCTS_MODE
+        self.categories_button.set_name('')
+        self.products_button.set_name('color_button')
         # pname, pu, pi, pid, cname, cid
         liststore = gtk.ListStore(str, float, float, int, str, int)
         for product in self.controller.get_products(cid):
@@ -126,8 +137,8 @@ class ProductsWidget:
 
         if self.mode == CATEGORIES_MODE:
             model = self.treeview.get_model()
-            cid = model[row[0]][1]
-            self.show_products_cb(None, cid)
+            self.cid = model[row[0]][1]
+            self.show_products_cb(None, self.cid)
 
     def add_cb(self, widget):
         """Adds new category or product."""
@@ -139,10 +150,10 @@ class ProductsWidget:
                 self.show_categories_cb(None)
         else:
             pname, pu, pi, cid = show_add_product_dialog(self.window, \
-                self.controller.get_categories())
+                self.controller.get_categories(), selected_category_id=self.cid)
             if pname:
                 self.controller.add_product(pname, pu, pi, cid)
-                self.show_products_cb(None)
+                self.show_products_cb(None, cid=self.cid)
 
     def remove_cb(self, widget):
         """Removes category or product."""
@@ -167,7 +178,7 @@ class ProductsWidget:
                 if show_question_dialog(self.window, _('Product removing'), \
                     _('Do you want to remove selected product?')):
                     self.controller.remove_product(pid)
-                    self.show_products_cb(None)
+                    self.show_products_cb(None, cid=self.cid)
 
     def edit_cb(self, widget):
         """Edits category or product."""
@@ -195,4 +206,4 @@ class ProductsWidget:
                     self.controller.get_categories(), (pname, pu, pi, cid))
                 if pname:
                     self.controller.update_product(pname, pu, pi, pid, cid)
-                    self.show_products_cb(None)
+                    self.show_products_cb(None, self.cid)

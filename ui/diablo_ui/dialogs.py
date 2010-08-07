@@ -182,7 +182,8 @@ def show_add_category_dialog(parent, data=None):
     return None
 
 
-def show_add_product_dialog(parent, categories, data=None):
+def show_add_product_dialog(parent, categories, data=None, \
+    selected_category_id=None):
     """Shows AddProduct dialog."""
 
     dialog = gtk.Dialog(parent=parent, flags=gtk.DIALOG_NO_SEPARATOR)
@@ -218,7 +219,11 @@ def show_add_product_dialog(parent, categories, data=None):
     cell = gtk.CellRendererText()
     combobox.pack_start(cell, False)
     combobox.add_attribute(cell, 'text', 0)
-    combobox.set_active(0)
+    # activate selected category
+    for index in range(len(liststore)):
+        if liststore[index][1] == selected_category_id:
+            combobox.set_active(index)
+            break
 
     # cheking for edit mode
     if data is not None: # edit mode

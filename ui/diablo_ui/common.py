@@ -20,6 +20,7 @@ def create_button(caption, callback, width=-1, height=70, stock=None):
     else:
         button.set_label(caption)
     button.set_size_request(width, height)
+    button.set_focus_on_click(False)
     button.connect('clicked', callback)
     return button
 

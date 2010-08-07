@@ -38,8 +38,8 @@ class MainWidget:
 
     def start(self):
         gtk.rc_parse('/usr/share/diabetto/rcfile')
+        self.window.fullscreen()
         self.window.show_all()
-        #self.window.fullscreen()
         gtk.main()
 
 
