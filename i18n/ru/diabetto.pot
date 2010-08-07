@@ -8,7 +8,7 @@ msgid "Products"
 msgstr "Продукты"
 
 msgid "Composition"
-msgstr "Композиция блюд"
+msgstr "Блюдо"
 
 msgid "Exit"
 msgstr "Выход"
@@ -35,7 +35,7 @@ msgid "Carbohydrates"
 msgstr "Углеводы"
 
 msgid "Index"
-msgstr "Гликемический индекс"
+msgstr "Глик. индекс"
 
 msgid "Category"
 msgstr "Категория"
@@ -91,8 +91,11 @@ msgstr "Редактирование блюда"
 msgid "Composition name"
 msgstr "Название блюда"
 
+msgid "Compositions"
+msgstr "Блюда"
+
 msgid "Chunks"
-msgstr "Количество порций"
+msgstr "Порции"
 
 msgid "Add new product to composition"
 msgstr "Добавление продукта в блюдо"
@@ -104,7 +107,7 @@ msgid "Product weight"
 msgstr "Вес (в граммах)"
 
 msgid "Carbohydrates per chunk"
-msgstr "Углеводов на порцию"
+msgstr "Угл. на порцию"
 
 msgid "Weight"
 msgstr "Вес (в граммах)"
