@@ -27,6 +27,23 @@ def show_question_dialog(parent, title, question):
     return False
 
 
+def show_error_dialog(parent, title, text):
+    """Shows Error dialog."""
+
+    dialog = gtk.Dialog(title=title, parent=parent, buttons=( \
+        _('Ok'), gtk.RESPONSE_OK), flags=gtk.DIALOG_NO_SEPARATOR)
+    label = gtk.Label('\n' + text + '\n')
+    image = gtk.image_new_from_stock(gtk.STOCK_DIALOG_ERROR, \
+        gtk.ICON_SIZE_DIALOG)
+    hbox = gtk.HBox(False, 8)
+    hbox.pack_start(image)
+    hbox.pack_start(label, padding=4)
+    dialog.vbox.pack_start(hbox)
+    dialog.vbox.show_all()
+    response = dialog.run()
+    dialog.destroy()
+
+
 def show_add_composition_dialog(parent, data=None):
     """
     Shows AddComposition dialog.
@@ -135,6 +152,7 @@ def show_add_product_to_composition_dialog(parent, controller, data=None):
         ccombobox = create_combobox(controller.get_categories())
         ccombobox.connect('changed', on_change_category_cb, controller, \
             pcombobox)
+        on_change_category_cb(ccombobox, controller, pcombobox)
 
     # packing widgets
     table.attach(cname_label, 0, 1, 0, 1)

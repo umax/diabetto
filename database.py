@@ -122,7 +122,9 @@ class Database:
             cname LIKE '%s'""" % cname.lower()).fetchone() is None:
             execute("""INSERT INTO categories values(NULL, ?)""", \
                 (cname.lower(),))
-        self.save()
+            self.save()
+            return True
+        return False
 
     def update_category(self, cname, cid):
         """Updates existing category."""

@@ -65,7 +65,7 @@ class ProductsWidget:
         self.switcher.set_current_page(self.page)
 
         # show categories at startup
-        self.show_categories_cb(None)
+        self._show_categories()
 
     def _set_treeview_content(self, content):
         """Sets TreeView content."""
@@ -100,6 +100,18 @@ class ProductsWidget:
         self.treeview.set_model(content)
         content.set_sort_column_id(0, gtk.SORT_ASCENDING)
 
+    def _show_categories(self):
+        """Updates categories list."""
+
+        self.products_button.set_name('')
+        self.categories_button.set_name('color_button')
+        # cname, cid
+        liststore = gtk.ListStore(str, int)
+        for category in self.controller.get_categories():
+            liststore.append(category)
+        self._set_treeview_content(liststore)
+
+
     # callbacks
     def show_menu_cb(self, widget):
         """Shows main menu."""
@@ -110,15 +122,9 @@ class ProductsWidget:
     def show_categories_cb(self, widget):
         """Shows all categories."""
 
-        self.mode = CATEGORIES_MODE
         self.cid = None
-        self.products_button.set_name('')
-        self.categories_button.set_name('color_button')
-        # cname, cid
-        liststore = gtk.ListStore(str, int)
-        for category in self.controller.get_categories():
-            liststore.append(category)
-        self._set_treeview_content(liststore)
+        self.mode = CATEGORIES_MODE
+        self._show_categories()
 
     def show_products_cb(self, widget, cid=None):
         """Shows all products."""
@@ -145,9 +151,8 @@ class ProductsWidget:
 
         if self.mode == CATEGORIES_MODE:
             cname = show_add_category_dialog(self.window)
-            if cname:
-                self.controller.add_category(cname)
-                self.show_categories_cb(None)
+            self.controller.add_category(cname)
+            self._show_categories()
         else:
             pname, pu, pi, cid = show_add_product_dialog(self.window, \
                 self.controller.get_categories(), selected_category_id=self.cid)

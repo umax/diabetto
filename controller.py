@@ -2,6 +2,8 @@
 Diabetto controller class
 """
 
+from gettext import gettext as _
+
 
 class Controller:
     def __init__(self, model, view):
@@ -72,7 +74,12 @@ class Controller:
     def add_category(self, cname):
         """Adds new category to database."""
 
-        self.model.add_category(cname)
+        if not cname or cname is None:
+            return
+        if not self.model.add_category(cname.strip()):
+            self.view.show_error_dialog( \
+                _('Adding category error'), \
+                _('Unable to add category. Category already exists!'))
 
     def update_category(self, cname, cid):
         """Updates existing category."""

@@ -4,6 +4,7 @@
 import gtk
 from gettext import gettext as _
 from diabetto.ui.diablo_ui.common import create_button
+from diabetto.ui.diablo_ui.dialogs import show_error_dialog
 from diabetto.ui.diablo_ui.products import ProductsWidget
 from diabetto.ui.diablo_ui.compositions import CompositionsWidget
 
@@ -41,6 +42,11 @@ class MainWidget:
         #self.window.fullscreen()
         self.window.show_all()
         gtk.main()
+
+
+    # dialogs
+    def show_error_dialog(self, title, text):
+        show_error_dialog(self.window, title, text)
 
 
     # callbacks
