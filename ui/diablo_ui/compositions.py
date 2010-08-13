@@ -68,7 +68,7 @@ class CompositionsWidget:
 
         cell = gtk.CellRendererText()
         cell.set_property('font-desc', pango.FontDescription( \
-                'Nokia Sans 24'))
+                'Nokia Sans 22'))
         cell.set_property('height', 70)
 
         if self.mode == COMPOSITIONS_MODE:
@@ -77,10 +77,10 @@ class CompositionsWidget:
             column1 = create_column(_('Composition'), cell, 0, \
                 cell_func=cell_capitalizer)
             column1.set_sort_column_id(0)
-            column2 = create_column(_('Carbohydrates'), cell, 1, \
+            column2 = create_column(_('Bread unit'), cell, 1, \
                 cell_func=cell_float_to_str)
             column3 = create_column(_('Chunks'), cell, 2)
-            column4 = create_column(_('Carbohydrates per chunk'), cell, 3, \
+            column4 = create_column(_('Bread unit per chunk'), cell, 3, \
                 cell_func=cell_float_to_str)
             for column in (column1, column2, column3, column4):
                 self.treeview.append_column(column)
@@ -159,7 +159,7 @@ class CompositionsWidget:
                 self._show_compositions()
         else:
             pid, pweight = show_add_product_to_composition_dialog( \
-                self.window, self.controller.get_products_list())
+                self.window, self.controller)
             if pweight is not None:
                 self.controller.add_product_to_composition( \
                     self.compid, pid, pweight)
@@ -216,8 +216,7 @@ class CompositionsWidget:
                 return
             else:
                 pid, pweight = show_add_product_to_composition_dialog( \
-                    self.window, self.controller.get_products_list(), \
-                    (pname, pweight, pid))
+                    self.window, self.controller, (pname, pweight, pid))
                 if pweight is not None:
                     self.controller.update_product_in_composition( \
                         self.compid, pid, pweight)

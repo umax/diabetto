@@ -3,6 +3,7 @@
 
 import gtk
 from gettext import gettext as _
+from diabetto.ui.diablo_ui.common import create_combobox
 
 
 def show_question_dialog(parent, title, question):
@@ -81,12 +82,23 @@ def show_add_composition_dialog(parent, data=None):
     return None, None
 
 
-def show_add_product_to_composition_dialog(parent, products, data=None):
+def show_add_product_to_composition_dialog(parent, controller, data=None):
     """
     Shows AddProductToCompositions dialog.
-    products: (pname, pid)
     data: (pname, pweight, pid)
     """
+
+    def on_change_category_cb(widget, controller, pcombobox):
+        """Emits when user changes category."""
+
+        cmodel, active = widget.get_model(), widget.get_active()
+        cid = cmodel[active][1]
+        pmodel = pcombobox.get_model()
+        pmodel.clear()
+        for product in controller.get_products_by_category(cid):
+            pmodel.append(product)
+        pcombobox.set_active(0)
+
 
     dialog = gtk.Dialog(parent=parent, flags=gtk.DIALOG_NO_SEPARATOR)
     if data is None:
@@ -98,50 +110,50 @@ def show_add_product_to_composition_dialog(parent, products, data=None):
     dialog.add_button(_('Cancel'), gtk.RESPONSE_CANCEL)
 
     # creating widgets
-    table = gtk.Table(rows=2, columns=2, homogeneous=True)
+    table = gtk.Table(rows=3, columns=2, homogeneous=True)
     table.set_border_width(8)
     table.set_col_spacings(10)
+    cname_label = gtk.Label(_('Category name'))
     pname_label = gtk.Label(_('Product name'))
     pweight_label = gtk.Label(_('Product weight'))
     pweight_entry = gtk.Entry()
     pweight_entry.set_text('0')
     pweight_entry.set_name('entry_widget')
 
-    # populating category list
-    liststore = gtk.ListStore(str, int)
-    for pname, pid in products:
-        liststore.append([pname, pid])
-    combobox = gtk.ComboBox(liststore)
-    cell = gtk.CellRendererText()
-    combobox.pack_start(cell, False)
-    combobox.add_attribute(cell, 'text', 0)
-    combobox.set_active(0)
-
     # cheking for edit mode
     if data is not None:
-        pweight_entry.set_text(str(data[1]))
-        for index in range(len(liststore)):
-            if liststore[index][1] == data[2]:
-                combobox.set_active(index)
-                break
-        combobox.set_sensitive(False)
+        pweight, pid = data[1], data[2]
+        pweight_entry.set_text(str(pweight))
+        cid = controller.get_product_category(pid)
+        ccombobox = create_combobox(controller.get_categories(), cid)
+        pcombobox = create_combobox(controller.get_products_by_category(cid), \
+            pid)
+        ccombobox.set_sensitive(False)
+        pcombobox.set_sensitive(False)
+    else:
+        pcombobox = create_combobox(controller.get_products_list())
+        ccombobox = create_combobox(controller.get_categories())
+        ccombobox.connect('changed', on_change_category_cb, controller, \
+            pcombobox)
 
     # packing widgets
-    table.attach(pname_label, 0, 1, 0, 1)
-    table.attach(combobox, 1, 2, 0, 1, ypadding=gtk.EXPAND|gtk.FILL)
-    table.attach(pweight_label, 0, 1, 1, 2)
-    table.attach(pweight_entry, 1, 2, 1, 2, ypadding=gtk.EXPAND|gtk.FILL)
+    table.attach(cname_label, 0, 1, 0, 1)
+    table.attach(ccombobox, 1, 2, 0, 1, ypadding=gtk.EXPAND|gtk.FILL)
+    table.attach(pname_label, 0, 1, 1, 2)
+    table.attach(pcombobox, 1, 2, 1, 2, ypadding=gtk.EXPAND|gtk.FILL)
+    table.attach(pweight_label, 0, 1, 2, 3)
+    table.attach(pweight_entry, 1, 2, 2, 3, ypadding=gtk.EXPAND|gtk.FILL)
     dialog.vbox.pack_start(table, padding=8)
     dialog.vbox.show_all()
     response = dialog.run()
     if response == gtk.RESPONSE_OK:
         try:
             pweight = int(pweight_entry.get_text())
+            model, active = pcombobox.get_model(), pcombobox.get_active()
+            pid = model[active][1]
         except:
             pass
         else:
-            model, active = combobox.get_model(), combobox.get_active()
-            pid = model[active][1]
             dialog.destroy()
             return pid, pweight
     dialog.destroy()
@@ -196,7 +208,7 @@ def show_add_product_dialog(parent, categories, data=None, \
     dialog.add_button(_('Cancel'), gtk.RESPONSE_CANCEL)
 
     # creating widgets
-    table = gtk.Table(rows=4, columns=2, homogeneous=True)
+    table = gtk.Table(rows=3, columns=2, homogeneous=True)
     table.set_border_width(8)
     table.set_col_spacings(10)
     table.set_row_spacings(8)
@@ -206,32 +218,21 @@ def show_add_product_dialog(parent, categories, data=None, \
     pu_label = gtk.Label(_('Carbohydrates'))
     pu_entry = gtk.Entry()
     pu_entry.set_name('entry_widget')
-    pi_label = gtk.Label(_('Index'))
-    pi_entry = gtk.Entry()
-    pi_entry.set_name('entry_widget')
+    #pi_label = gtk.Label(_('Index'))
+    #pi_entry = gtk.Entry()
+    #pi_entry.set_name('entry_widget')
     category_label = gtk.Label(_('Category'))
 
-    # populating category list
-    liststore = gtk.ListStore(str, int)
-    for cname, cid in categories:
-        liststore.append([cname, cid])
-    combobox = gtk.ComboBox(liststore)
-    cell = gtk.CellRendererText()
-    combobox.pack_start(cell, False)
-    combobox.add_attribute(cell, 'text', 0)
-    # activate selected category
-    for index in range(len(liststore)):
-        if liststore[index][1] == selected_category_id:
-            combobox.set_active(index)
-            break
+    combobox = create_combobox(categories, selected_category_id)
 
     # cheking for edit mode
     if data is not None: # edit mode
         pname_entry.set_text(data[0])
         pu_entry.set_text(str(data[1]))
-        pi_entry.set_text(str(data[2]))
-        for index in range(len(liststore)):
-            if liststore[index][1] == data[3]:
+        #pi_entry.set_text(str(data[2]))
+        model = combobox.get_model()
+        for index in range(len(model)):
+            if model[index][1] == data[3]:
                 combobox.set_active(index)
                 break
 
@@ -240,10 +241,14 @@ def show_add_product_dialog(parent, categories, data=None, \
     table.attach(pname_entry, 1, 2, 0, 1, xoptions=gtk.EXPAND|gtk.FILL)
     table.attach(pu_label, 0, 1, 1, 2)
     table.attach(pu_entry, 1, 2, 1, 2, xoptions=gtk.EXPAND|gtk.FILL)
-    table.attach(pi_label, 0, 1, 2, 3)
-    table.attach(pi_entry, 1, 2, 2, 3, xoptions=gtk.EXPAND|gtk.FILL)
-    table.attach(category_label, 0, 1, 3, 4)
-    table.attach(combobox, 1, 2, 3, 4, xoptions=gtk.EXPAND|gtk.FILL)
+    # temporary disable pi widgets
+    #table.attach(pi_label, 0, 1, 2, 3)
+    #table.attach(pi_entry, 1, 2, 2, 3, xoptions=gtk.EXPAND|gtk.FILL)
+    #table.attach(category_label, 0, 1, 3, 4)
+    #table.attach(combobox, 1, 2, 3, 4, xoptions=gtk.EXPAND|gtk.FILL)
+
+    table.attach(category_label, 0, 1, 2, 3)
+    table.attach(combobox, 1, 2, 2, 3, xoptions=gtk.EXPAND|gtk.FILL)
     dialog.vbox.pack_start(table, expand=True)
     dialog.vbox.show_all()
     response = dialog.run()
@@ -251,7 +256,8 @@ def show_add_product_dialog(parent, categories, data=None, \
         pname = pname_entry.get_text()
         try:
             pu = float(pu_entry.get_text().replace(',', '.'))
-            pi = float(pi_entry.get_text().replace(',', '.'))
+            #pi = float(pi_entry.get_text().replace(',', '.'))
+            pi = 1.0
         except:
             pass
         else:

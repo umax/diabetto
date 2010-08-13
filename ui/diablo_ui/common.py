@@ -53,3 +53,23 @@ def create_column(title, cell, index, alignment=0.5, cell_func=None):
     return column
 
 
+def create_combobox(items=[], active_item_id=None):
+    """Creates combobox and populates it."""
+
+    liststore = gtk.ListStore(str, int)
+    for item in items:
+        liststore.append(item)
+    combobox = gtk.ComboBox(liststore)
+    cell = gtk.CellRendererText()
+    combobox.pack_start(cell, False)
+    combobox.add_attribute(cell, 'text', 0)
+    if active_item_id is None:
+        combobox.set_active(0)
+    else:
+        for index in range(len(liststore)):
+            if liststore[index][1] == active_item_id:
+                combobox.set_active(index)
+                break
+    return combobox
+
+

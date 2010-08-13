@@ -29,6 +29,16 @@ class Controller:
                 cname, cid])
         return result
 
+    def get_product_category(self, pid):
+        """Gets product category for selected product."""
+
+        return self.model.get_product_category(pid)
+
+    def get_products_by_category(self, cid):
+        """Gets all products for selected category."""
+
+        return self.model.get_products_by_category(cid)
+
     def get_products_list(self):
         """Gets product list."""
 
@@ -55,8 +65,8 @@ class Controller:
             for pid, pweight in model.get_composition_content(compid):
                 pname, pu, pi = model.get_product_by_id(pid)
                 carbohydrates += (pu / 100.0 * pweight)
-            result.append( \
-                (compname, carbohydrates, chunks, carbohydrates/chunks, compid))
+            result.append((compname, carbohydrates / 11.0, chunks, \
+                carbohydrates / chunks / 11.0, compid))
         return result
 
     def add_category(self, cname):

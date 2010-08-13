@@ -53,7 +53,7 @@ class Database:
         """Connects to database."""
 
         new_database = not os.path.exists(self._path)
-        self.conn = sqlite3.connect(self._path, isolation_level="EXCLUSIVE")
+        self.conn = sqlite3.connect(self._path)
         if new_database:
             self.conn.executescript(SCHEMA)
         self.save()
@@ -206,6 +206,18 @@ class Database:
 
         return self.conn.execute("""SELECT pname, pu, pi FROM products \
             WHERE pid=?""", (pid,)).fetchone()
+
+    def get_products_by_category(self, cid):
+        """Gets all products for selected category."""
+
+        return self.conn.execute("""SELECT pname, pid FROM products WHERE \
+            cid=?""", (cid,)).fetchall()
+
+    def get_product_category(self, pid):
+        """Gets product category for selected product."""
+
+        return self.conn.execute("""SELECT cid FROM products WHERE pid=?""", \
+            (pid,)).fetchone()[0]
 
 
 if __name__ == "__main__":
