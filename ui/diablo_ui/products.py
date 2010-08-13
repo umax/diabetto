@@ -76,7 +76,7 @@ class ProductsWidget:
 
         cell = gtk.CellRendererText()
         cell.set_property('font-desc', pango.FontDescription( \
-                'Nokia Sans 24'))
+                'Nokia Sans 22'))
         cell.set_property('height', 70)
 
         if self.mode == CATEGORIES_MODE:
@@ -92,6 +92,8 @@ class ProductsWidget:
                 cell_func=cell_float_to_str)
             column3 = create_column(_('Index'), cell, 2, \
                 cell_func=cell_float_to_str)
+            # temporary hide Index column
+            column3.set_visible(False)
             column4 = create_column(_('Category'), cell, 4, \
                 cell_func=cell_capitalizer)
             for column in (column1, column2, column3, column4):
