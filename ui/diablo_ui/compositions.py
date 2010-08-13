@@ -76,7 +76,6 @@ class CompositionsWidget:
             # compname, carbohydrates, chunks, carbohydrates per chunk, compid
             column1 = create_column(_('Composition'), cell, 0, \
                 cell_func=cell_capitalizer)
-            column1.set_sort_column_id(0)
             column2 = create_column(_('Bread unit'), cell, 1, \
                 cell_func=cell_float_to_str)
             column3 = create_column(_('Chunks'), cell, 2)
@@ -89,12 +88,13 @@ class CompositionsWidget:
             # productname, productweight, productid
             column1 = create_column(_('Product'), cell, 0, \
                 cell_func=cell_capitalizer)
-            column1.set_sort_column_id(0)
             column2 = create_column(_('Weight'), cell, 1)
             for column in (column1, column2):
                 self.treeview.append_column(column)
 
         self.treeview.set_model(content)
+        content.set_sort_column_id(0, gtk.SORT_ASCENDING)
+
 
     def _show_compositions(self):
         """Shows existing compositions."""

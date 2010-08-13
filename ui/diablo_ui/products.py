@@ -80,14 +80,12 @@ class ProductsWidget:
         cell.set_property('height', 70)
 
         if self.mode == CATEGORIES_MODE:
-            column = create_column(_('Categories'), cell, 0, \
+            column1 = create_column(_('Categories'), cell, 0, \
                 cell_func=cell_capitalizer)
-            column.set_sort_column_id(0)
-            self.treeview.append_column(column)
+            self.treeview.append_column(column1)
         else:
             column1 = create_column(_('Product'), cell, 0, \
                 cell_func=cell_capitalizer)
-            column1.set_sort_column_id(0)
             column2 = create_column(_('Carbohydrates'), cell, 1, \
                 cell_func=cell_float_to_str)
             column3 = create_column(_('Index'), cell, 2, \
@@ -100,7 +98,7 @@ class ProductsWidget:
                 self.treeview.append_column(column)
 
         self.treeview.set_model(content)
-
+        content.set_sort_column_id(0, gtk.SORT_ASCENDING)
 
     # callbacks
     def show_menu_cb(self, widget):
