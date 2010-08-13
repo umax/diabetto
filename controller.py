@@ -79,7 +79,7 @@ class Controller:
         if not self.model.add_category(cname.strip()):
             self.view.show_error_dialog( \
                 _('Adding category error'), \
-                _('Unable to add category. Category already exists!'))
+                _('Unable to add category.\nCategory already in database!'))
 
     def update_category(self, cname, cid):
         """Updates existing category."""
@@ -92,12 +92,16 @@ class Controller:
         if cid != 1:
             self.model.del_category(cid)
 
-    def add_product(self, pname, pu, pi, cid):
+    def add_product(self, product):
         """Adds new product to database."""
 
+        pname, pu, pi, cid = product
         if (not pu) or (not pi) or (not cid):
             return
-        self.model.add_product(pname, pu, pi, cid)
+        if not self.model.add_product(pname.strip(), pu, pi, cid):
+            self.view.show_error_dialog( \
+                _('Adding product error'), \
+                _('Unable to add product.\nProduct already in database!'))
 
     def add_product_to_composition(self, compid, pid, pweight):
         """Adds new products to existing composition."""

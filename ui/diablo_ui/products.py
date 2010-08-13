@@ -111,6 +111,17 @@ class ProductsWidget:
             liststore.append(category)
         self._set_treeview_content(liststore)
 
+    def _show_products(self, cid=None):
+        """Updates products list."""
+
+        self.categories_button.set_name('')
+        self.products_button.set_name('color_button')
+        # pname, pu, pi, pid, cname, cid
+        liststore = gtk.ListStore(str, float, float, int, str, int)
+        for product in self.controller.get_products(cid):
+            liststore.append(product)
+        self._set_treeview_content(liststore)
+
 
     # callbacks
     def show_menu_cb(self, widget):
@@ -130,21 +141,16 @@ class ProductsWidget:
         """Shows all products."""
 
         self.mode = PRODUCTS_MODE
-        self.categories_button.set_name('')
-        self.products_button.set_name('color_button')
-        # pname, pu, pi, pid, cname, cid
-        liststore = gtk.ListStore(str, float, float, int, str, int)
-        for product in self.controller.get_products(cid):
-            liststore.append(product)
-        self._set_treeview_content(liststore)
+        self._show_products()
 
     def on_treeview_double_click_cb(self, widget, row, column):
         """Emits when user double clicks on TreeView item."""
 
         if self.mode == CATEGORIES_MODE:
+            self.mode = PRODUCTS_MODE
             model = self.treeview.get_model()
             self.cid = model[row[0]][1]
-            self.show_products_cb(None, self.cid)
+            self._show_products(self.cid)
 
     def add_cb(self, widget):
         """Adds new category or product."""
@@ -154,11 +160,10 @@ class ProductsWidget:
             self.controller.add_category(cname)
             self._show_categories()
         else:
-            pname, pu, pi, cid = show_add_product_dialog(self.window, \
+            product = show_add_product_dialog(self.window, \
                 self.controller.get_categories(), selected_category_id=self.cid)
-            if pname:
-                self.controller.add_product(pname, pu, pi, cid)
-                self.show_products_cb(None, cid=self.cid)
+            self.controller.add_product(product)
+            self._show_products(self.cid)
 
     def remove_cb(self, widget):
         """Removes category or product."""

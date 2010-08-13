@@ -242,6 +242,9 @@ def show_add_product_dialog(parent, categories, data=None, \
     category_label = gtk.Label(_('Category'))
 
     combobox = create_combobox(categories, selected_category_id)
+    # disable combobox if user enter to category
+    if selected_category_id is not None:
+        combobox.set_sensitive(False)
 
     # cheking for edit mode
     if data is not None: # edit mode
