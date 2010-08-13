@@ -136,4 +136,16 @@ msgstr "ХЕ"
 msgid "Bread unit per chunk"
 msgstr "ХЕ на порцию"
 
+msgid "Adding category error"
+msgstr "Ошибка добавления категории"
+
+msgid "Unable to add category.\nCategory already in database!"
+msgstr "Невозможно добавить категорию.\nТакая категория уже есть в базе данных!"
+
+msgid "Adding product error"
+msgstr "Ошибка добавления продукта"
+
+msgid "Unable to add product.\nProduct already in database!"
+msgstr "Невозможно добавить продукт.\nТакой продукт уже есть в базе данных!"
+
 
