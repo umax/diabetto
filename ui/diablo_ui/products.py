@@ -98,6 +98,7 @@ class ProductsWidget:
                 self.treeview.append_column(column)
 
         self.treeview.set_model(content)
+        # sorting content in the first column
         content.set_sort_column_id(0, gtk.SORT_ASCENDING)
 
     def _show_categories(self):
@@ -157,13 +158,13 @@ class ProductsWidget:
 
         if self.mode == CATEGORIES_MODE:
             cname = show_add_category_dialog(self.window)
-            self.controller.add_category(cname)
-            self._show_categories()
+            if self.controller.add_category(cname):
+                self._show_categories()
         else:
             product = show_add_product_dialog(self.window, \
                 self.controller.get_categories(), selected_category_id=self.cid)
-            self.controller.add_product(product)
-            self._show_products(self.cid)
+            if self.controller.add_product(product):
+                self._show_products(self.cid)
 
     def remove_cb(self, widget):
         """Removes category or product."""
@@ -178,7 +179,7 @@ class ProductsWidget:
                 if show_question_dialog(self.window, _('Category removing'), \
                     _('Do you want to remove selected category?')):
                     self.controller.remove_category(cid)
-                    self.show_categories_cb(None)
+                    self._show_categories()
         else:
             try:
                 pid = model[iterator][3]
@@ -188,7 +189,7 @@ class ProductsWidget:
                 if show_question_dialog(self.window, _('Product removing'), \
                     _('Do you want to remove selected product?')):
                     self.controller.remove_product(pid)
-                    self.show_products_cb(None, cid=self.cid)
+                    self._show_products(self.cid)
 
     def edit_cb(self, widget):
         """Edits category or product."""
@@ -201,9 +202,8 @@ class ProductsWidget:
                 return
             else:
                 new_cname = show_add_category_dialog(self.window, cname)
-                if new_cname:
-                    self.controller.update_category(new_cname, cid)
-                    self.show_categories_cb(None)
+                if self.controller.update_category(new_cname, cid):
+                    self._show_categories()
         else:
             try:
                 pname, pu, pi, pid, cid = model[iterator][0], \
@@ -214,6 +214,5 @@ class ProductsWidget:
             else:
                 pname, pu, pi, cid = show_add_product_dialog(self.window,  \
                     self.controller.get_categories(), (pname, pu, pi, cid))
-                if pname:
-                    self.controller.update_product(pname, pu, pi, pid, cid)
-                    self.show_products_cb(None, self.cid)
+                if self.controller.update_product(pname, pu, pi, pid, cid):
+                    self._show_products(self.cid)

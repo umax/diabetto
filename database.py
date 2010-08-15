@@ -88,9 +88,14 @@ class Database:
     def update_product(self, pname, pu, pi, pid, cid):
         """Updates existing product."""
 
-        self.conn.execute("""UPDATE products SET pname=?, pu=?, pi=?, cid=? \
-            WHERE pid=?""", (pname, pu, pi, cid, pid))
-        self.save()
+        execute = self.conn.execute
+        if execute("""SELECT pname FROM products WHERE pname LIKE '%s'""" \
+            % pname.lower()).fetchone() is None:
+            execute("""UPDATE products SET pname=?, pu=?, pi=?, cid=? \
+                WHERE pid=?""", (pname, pu, pi, cid, pid))
+            self.save()
+            return True
+        return False
 
     def update_product_in_composition(self, compid, pid, pweight):
         """Updates product properties in composition."""
@@ -129,9 +134,14 @@ class Database:
     def update_category(self, cname, cid):
         """Updates existing category."""
 
-        self.conn.execute("""UPDATE categories SET cname=? WHERE cid=?""", \
-            (cname.lower(), cid))
-        self.save()
+        execute = self.conn.execute
+        if execute("""SELECT cname FROM categories WHERE \
+            cname LIKE '%s'""" % cname.lower()).fetchone() is None:
+            execute("""UPDATE categories SET cname=? WHERE cid=?""", \
+                (cname.lower(), cid))
+            self.save()
+            return True
+        return False
 
     def del_category(self, cid, del_products=True):
         """Remove category from database."""

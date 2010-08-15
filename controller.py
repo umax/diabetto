@@ -80,11 +80,20 @@ class Controller:
             self.view.show_error_dialog( \
                 _('Adding category error'), \
                 _('Unable to add category.\nCategory already in database!'))
+            return False
+        return True
 
     def update_category(self, cname, cid):
         """Updates existing category."""
 
-        self.model.update_category(cname, cid)
+        if cname:
+            if not self.model.update_category(cname.strip(), cid):
+                self.view.show_error_dialog( \
+                    _('Updating category error'), \
+                    _('Unable to rename category.\nCategory already in ' \
+                    'database!'))
+                return False
+            return True
 
     def remove_category(self, cid):
         """Removes category except 'default' category."""
@@ -102,6 +111,8 @@ class Controller:
             self.view.show_error_dialog( \
                 _('Adding product error'), \
                 _('Unable to add product.\nProduct already in database!'))
+            return False
+        return True
 
     def add_product_to_composition(self, compid, pid, pweight):
         """Adds new products to existing composition."""
@@ -111,7 +122,14 @@ class Controller:
     def update_product(self, pname, pu, pi, pid, cid):
         """Updates existing product."""
 
-        self.model.update_product(pname, pu, pi, pid, cid)
+        if (not pname) or (not pu):
+            return
+        if not self.model.update_product(pname.strip(), pu, pi, pid, cid):
+            self.view.show_error_dialog( \
+                _('Updating product error'), \
+                _('Unable to rename product.\nProduct already in database!'))
+            return False
+        return True
 
     def update_product_in_composition(self, compid, pid, pweight):
         """Updates product properties in composition."""
