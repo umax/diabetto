@@ -76,14 +76,21 @@ class Database:
             pname LIKE '%s'""" % pname.lower()).fetchone() is None:
             self.conn.execute("""INSERT INTO products values(NULL,?,?,?,?)""", \
                 (pname.lower(), pu, pi, cid))
-        self.save()
+            self.save()
+            return True
+        return False
 
     def add_product_to_composition(self, compid, pid, pweight):
         """Adds product to existing composition."""
 
-        self.conn.execute("""INSERT INTO composition_content values(?,?,?)""", \
-            (compid, pid, pweight))
-        self.save()
+        execute = self.conn.execute
+        if execute("""SELECT pid FROM composition_content WHERE pid=?""", \
+            (pid,)).fetchone() is None:
+            execute("""INSERT INTO composition_content values(?,?,?)""", \
+                (compid, pid, pweight))
+            self.save()
+            return True
+        return False
 
     def update_product(self, pname, pu, pi, pid, cid):
         """Updates existing product."""
@@ -162,14 +169,21 @@ class Database:
             compname LIKE '%s'""" % compname.lower()).fetchone() is None:
             execute("""INSERT INTO compositions values(NULL, ?, ?)""", \
                 (compname.lower(), chunks))
-        self.save()
+            self.save()
+            return True
+        return False
 
     def update_composition(self, compid, compname, chunks):
         """Updates exisiting composition."""
 
-        self.conn.execute("""UPDATE compositions SET compname=?, chunks=? \
-            WHERE compid=?""", (compname, chunks, compid))
-        self.save()
+        execute = self.conn.execute
+        if execute("""SELECT compname FROM compositions WHERE \
+            compname LIKE '%s'""" % compname.lower()).fetchone() is None:
+            execute("""UPDATE compositions SET compname=?, chunks=? \
+                WHERE compid=?""", (compname, chunks, compid))
+            self.save()
+            return True
+        return False
 
     def del_composition(self, compid):
         """Removes composition and its content from database."""

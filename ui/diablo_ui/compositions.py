@@ -153,17 +153,14 @@ class CompositionsWidget:
         """Adds new composition or product to composition."""
 
         if self.mode == COMPOSITIONS_MODE:
-            compname, chunks = show_add_composition_dialog(self.window)
-            if compname:
-                self.controller.add_composition(compname, chunks)
+            composition = show_add_composition_dialog(self.window)
+            if self.controller.add_composition(composition):
                 self._show_compositions()
         else:
-            pid, pweight = show_add_product_to_composition_dialog( \
+            product = show_add_product_to_composition_dialog( \
                 self.window, self.controller)
-            if pweight is not None:
-                self.controller.add_product_to_composition( \
-                    self.compid, pid, pweight)
-            self._show_products_in_composition()
+            if self.controller.add_product_to_composition(self.compid, product):
+                self._show_products_in_composition()
 
     def remove_cb(self, widget):
         """Removes composition or product."""
@@ -203,10 +200,9 @@ class CompositionsWidget:
             except: # no composition is selected
                 return
             else:
-                compname, chunks = show_add_composition_dialog( \
-                    self.window, (compname, chunks))
-                if compname:
-                    self.controller.update_composition(compid, compname, chunks)
+                composition = show_add_composition_dialog(self.window, \
+                    (compname, chunks))
+                if self.controller.update_composition(compid, composition):
                     self._show_compositions()
         else:
             try:

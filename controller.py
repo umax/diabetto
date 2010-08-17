@@ -75,7 +75,7 @@ class Controller:
         """Adds new category to database."""
 
         if not cname or cname is None:
-            return
+            return False
         if not self.model.add_category(cname.strip()):
             self.view.show_error_dialog( \
                 _('Adding category error'), \
@@ -106,7 +106,7 @@ class Controller:
 
         pname, pu, pi, cid = product
         if (not pu) or (not pi) or (not cid):
-            return
+            return False
         if not self.model.add_product(pname.strip(), pu, pi, cid):
             self.view.show_error_dialog( \
                 _('Adding product error'), \
@@ -114,16 +114,25 @@ class Controller:
             return False
         return True
 
-    def add_product_to_composition(self, compid, pid, pweight):
+    def add_product_to_composition(self, compid, product):
         """Adds new products to existing composition."""
 
-        self.model.add_product_to_composition(compid, pid, pweight)
+        pid, pweight = product
+        if pweight < 0:
+            return False
+        if not self.model.add_product_to_composition(compid, pid, pweight):
+            self.view.show_error_dialog( \
+                _('Adding product error'), \
+                _('Unable to add product to composition.\nProduct already in ' \
+                'composition!'))
+            return False
+        return True
 
     def update_product(self, pname, pu, pi, pid, cid):
         """Updates existing product."""
 
         if (not pname) or (not pu):
-            return
+            return False
         if not self.model.update_product(pname.strip(), pu, pi, pid, cid):
             self.view.show_error_dialog( \
                 _('Updating product error'), \
@@ -146,15 +155,31 @@ class Controller:
 
         self.model.del_product_from_composition(compid, pid)
 
-    def add_composition(self, compname, chunks):
+    def add_composition(self, composition):
         """Adds new composition to database."""
 
-        self.model.add_composition(compname, chunks)
+        compname, chunks = composition
+        if (not compname) or (chunks <= 0):
+            return False
+        if not self.model.add_composition(compname.strip(), chunks):
+            self.view.show_error_dialog( \
+                _('Adding composition error'), \
+                _('Unable to add composition.\nComposition already in database!'))
+            return False
+        return True
 
-    def update_composition(self, compid, compname, chunks):
+    def update_composition(self, compid, composition):
         """Updates existing composition."""
 
-        self.model.update_composition(compid, compname, chunks)
+        compname, chunks = composition
+        if (not composition) or (chunks <= 0):
+            return False
+        if not self.model.update_composition(compid, compname.strip(), chunks):
+            self.view.show_error_dialog( \
+                _('Updating composition error'), \
+                _('Unable to rename composition.\nComposition already in database!'))
+            return False
+        return True
 
     def remove_composition(self, compid):
         """Removes existing composition."""
