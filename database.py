@@ -84,8 +84,8 @@ class Database:
         """Adds product to existing composition."""
 
         execute = self.conn.execute
-        if execute("""SELECT pid FROM composition_content WHERE pid=?""", \
-            (pid,)).fetchone() is None:
+        if execute("""SELECT pid FROM composition_content WHERE compid=? AND \
+            pid=?""", (compid, pid)).fetchone() is None:
             execute("""INSERT INTO composition_content values(?,?,?)""", \
                 (compid, pid, pweight))
             self.save()
