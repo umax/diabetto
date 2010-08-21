@@ -148,4 +148,31 @@ msgstr "Ошибка добавления продукта"
 msgid "Unable to add product.\nProduct already in database!"
 msgstr "Невозможно добавить продукт.\nТакой продукт уже есть в базе данных!"
 
+msgid "Updating category error"
+msgstr "Ошибка изменения категории"
+
+msgid "Unable to rename category.\nCategory already in database!"
+msgstr "Невозможно переименовать категорию.\nТакая категория уже есть в базе данных!"
+
+msgid "Unable to add product to composition.\nProduct already in composition!"
+msgstr "Невозможно добавить продукт в блюдо.\nБлюдо уже содержит такой продукт!"
+
+msgid "Updating product error"
+msgstr "Ошибка изменения продукта"
+
+msgid "Unable to rename product.\nProduct already in database!"
+msgstr "Невозможно изменить продукт.\nТакой продукт уже есть в базе данных!"
+
+msgid "Adding composition error"
+msgstr "Ошибка добавления блюда"
+
+msgid "Unable to add composition.\nComposition already in database!"
+msgstr "Невозможно добавить блюдо.\nТакое блюдо уже есть в базе данных!"
+
+msgid "Updating composition error"
+msgstr "Ошибка изменения блюда"
+
+msgid "Unable to rename composition.\nComposition already in database!"
+msgstr "Невозможно изменить блюдо.\nТакое блюдо уже есть в базе данных!"
+
 
