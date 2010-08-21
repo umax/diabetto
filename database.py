@@ -175,14 +175,10 @@ class Database:
     def update_composition(self, compid, compname, chunks):
         """Updates exisiting composition."""
 
-        execute = self.conn.execute
-        if execute("""SELECT compname FROM compositions WHERE \
-            compname LIKE '%s'""" % compname.lower()).fetchone() is None:
-            execute("""UPDATE compositions SET compname=?, chunks=? \
-                WHERE compid=?""", (compname, chunks, compid))
-            self.save()
-            return True
-        return False
+        self.conn.execute("""UPDATE compositions SET compname=?, chunks=? \
+            WHERE compid=?""", (compname, chunks, compid))
+        self.save()
+        return True
 
     def del_composition(self, compid):
         """Removes composition and its content from database."""
