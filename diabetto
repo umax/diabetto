@@ -30,19 +30,25 @@ def parse_command_line(argv):
     parser = OptionParser(usage='%prog [options]')
     parser.add_option('-u', '--ui', action='store', \
         help='set user interface type', default='diablo')
+    parser.add_option('-d', '--database', action='store', \
+        help='set database path', default=None)
     return parser.parse_args(argv)
 
 
 def main(argv):
     opts, argv = parse_command_line(argv)
 
-    if 'MYDOCSDIR' in os.environ and os.path.exists(os.path.join(\
-        os.environ['MYDOCSDIR'], '.documents')):
-        basedir = os.path.join(os.environ['MYDOCSDIR'], '.documents/diabetto')
-    elif os.path.exists(os.path.join(os.getcwdu(), '.diabetto')):
-        basedir = os.path.abspath(os.path.join(os.getcwdu(), '.diabetto'))
+    if opts.database is not None:
+        basedir = opts.database
     else:
-        basedir = os.path.join(os.environ['HOME'], '.diabetto')
+        if 'MYDOCSDIR' in os.environ and os.path.exists(os.path.join( \
+            os.environ['MYDOCSDIR'], '.documents')):
+            basedir = os.path.join(os.environ['MYDOCSDIR'], \
+                '.documents/diabetto')
+        elif os.path.exists(os.path.join(os.getcwdu(), '.diabetto')):
+            basedir = os.path.abspath(os.path.join(os.getcwdu(), '.diabetto'))
+        else:
+            basedir = os.path.join(os.environ['HOME'], '.diabetto')
 
     model = Database(basedir)
     view = app_factory(opts.ui)

@@ -45,7 +45,10 @@ SCHEMA = """
 
 class Database:
     def __init__(self, basedir):
-        self._path = os.path.join(basedir, DATABASE_NAME)
+        if basedir.endswith(DATABASE_NAME):
+            self._path = basedir
+        else:
+            self._path = os.path.join(basedir, DATABASE_NAME)
         self.conn = None
         self.connect()
 
