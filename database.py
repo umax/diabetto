@@ -95,14 +95,10 @@ class Database:
     def update_product(self, pname, pu, pi, pid, cid):
         """Updates existing product."""
 
-        execute = self.conn.execute
-        if execute("""SELECT pname FROM products WHERE pname LIKE '%s'""" \
-            % pname.lower()).fetchone() is None:
-            execute("""UPDATE products SET pname=?, pu=?, pi=?, cid=? \
-                WHERE pid=?""", (pname, pu, pi, cid, pid))
-            self.save()
-            return True
-        return False
+        self.conn.execute("""UPDATE products SET pname=?, pu=?, pi=?, cid=? \
+            WHERE pid=?""", (pname, pu, pi, cid, pid))
+        self.save()
+        return True
 
     def update_product_in_composition(self, compid, pid, pweight):
         """Updates product properties in composition."""
